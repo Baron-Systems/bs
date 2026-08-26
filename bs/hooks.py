@@ -86,7 +86,13 @@ app_license = "mit"
 # ------------
 
 # before_install = "bs.install.before_install"
-# after_install = "bs.install.after_install"
+after_install = "bs.patches.add_sales_order_custom_fields.execute"
+
+# Patches
+# -------
+patches = [
+	{"patch_module": "bs.patches.add_sales_order_custom_fields", "patch_name": "Add Sales Order Custom Fields for Store"},
+]
 
 # Uninstallation
 # ------------
@@ -255,4 +261,11 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+
+# Website Route Rules
+# -------------------
+# Serve the Vue SPA for any /frontend/* sub-route (let client-side router handle it)
+website_route_rules = [
+	{"from_route": "/bs/<path:app_path>", "to_route": "bs"},
+]
 

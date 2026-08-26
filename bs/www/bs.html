@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/assets/bs/frontend/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baron Services</title>
+  {% for file in css_files %}
+  <link rel="stylesheet" crossorigin href="{{ file }}" />
+  {% endfor %}
+</head>
+
+<body>
+  <div id="app"></div>
+  <div id="modals"></div>
+  <div id="popovers"></div>
+
+  <script>
+    window.csrf_token = "{{ csrf_token }}";
+    window.frappe = window.frappe || {};
+    window.frappe.session = {
+      user: "{{ user }}",
+      user_fullname: "{{ user_fullname }}",
+      user_image: "{{ user_image }}"
+    };
+    // Translation helper — uses Frappe's __ if available, otherwise passthrough.
+    // Supports printf-style placeholders: __("Hello {0}", ["World"])
+    window.__ = window.__ || function (str, replacements) {
+      if (typeof window.frappe.__ === "function") {
+        return window.frappe.__(str, replacements);
+      }
+      if (Array.isArray(replacements)) {
+        return str.replace(/\{(\d+)\}/g, function (_, i) {
+          return replacements[i] != null ? replacements[i] : "";
+        });
+      }
+      return str;
+    };
+  </script>
+
+  {% for file in js_files %}
+  <script type="module" crossorigin src="{{ file }}"></script>
+  {% endfor %}
+</body>
+
+</html>

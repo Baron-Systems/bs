@@ -1,0 +1,54 @@
+import router from "@/router"
+import { createResource } from "frappe-ui"
+import { computed, reactive } from "vue"
+
+import { ensureCSRFToken } from "@/utils/csrf"
+import { userResource, userData } from "./user"
+
+export function sessionUser() {
+	const cookies = new URLSearchParams(document.cookie.split("; ").join("&"))
+	let _sessionUser = cookies.get("user_id")
+	if (_sessionUser === "Guest") {
+		_sessionUser = null
+	}
+	return _sessionUser
+}
+
+export const session = reactive({
+	login: createResource({
+		url: "login",
+		makeParams({ email, password }) {
+			return {
+				usr: email,
+				pwd: password,
+			}
+		},
+		async onSuccess(data) {
+			await ensureCSRFToken()
+			await userResource.reload()
+			userData.refresh()
+			session.user = sessionUser()
+			session.login.reset()
+			router.replace({ name: "Home" })
+		},
+		onError(error) {
+			console.error("Login error:", error)
+		},
+	}),
+	logout: createResource({
+		url: "logout",
+		onSuccess() {
+			userResource.reset()
+			session.user = sessionUser()
+			router.replace({ name: "Login" })
+		},
+		onError(error) {
+			console.error("Logout error:", error)
+			userResource.reset()
+			session.user = null
+			router.replace({ name: "Login" })
+		},
+	}),
+	user: sessionUser(),
+	isLoggedIn: computed(() => !!session.user),
+})
