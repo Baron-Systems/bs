@@ -116,6 +116,7 @@ def get_party_ledger(party_type, party, company=None, from_date=None, to_date=No
 		entry_conditions.append("account = %(account)s")
 		entry_params["account"] = party_account
 
+	# --- Fetch only the newest N rows for display ---
 	entries = frappe.db.sql(f"""
 		SELECT
 			name AS gl_entry,
@@ -136,27 +137,40 @@ def get_party_ledger(party_type, party, company=None, from_date=None, to_date=No
 			creation
 		FROM `tabGL Entry`
 		WHERE {' AND '.join(entry_conditions)}
-		ORDER BY posting_date ASC, creation ASC
+		ORDER BY posting_date DESC, creation DESC
 		LIMIT %(limit)s
 	""", {**entry_params, "limit": limit}, as_dict=True)
-
-	# --- Compute running balance ---
-	balance = opening_balance
-	total_debit = 0
-	total_credit = 0
 
 	for entry in entries:
 		entry["debit"] = flt(entry["debit"])
 		entry["credit"] = flt(entry["credit"])
-		balance += entry["debit"] - entry["credit"]
+
+	# --- Totals over the FULL date range ---
+	# If we fetched fewer rows than the limit, the result is complete and we can
+	# sum the rows we have. Otherwise, run a separate aggregate over the full range.
+	if len(entries) < limit:
+		total_debit = sum(entry["debit"] for entry in entries)
+		total_credit = sum(entry["credit"] for entry in entries)
+		closing_balance = opening_balance + total_debit - total_credit
+	else:
+		totals = frappe.db.sql(f"""
+			SELECT
+				COALESCE(SUM(debit), 0) AS total_debit,
+				COALESCE(SUM(credit), 0) AS total_credit
+			FROM `tabGL Entry`
+			WHERE {' AND '.join(entry_conditions)}
+		""", entry_params, as_dict=True)[0]
+
+		total_debit = flt(totals.total_debit)
+		total_credit = flt(totals.total_credit)
+		closing_balance = opening_balance + total_debit - total_credit
+
+	# --- Compute running balance backwards from the real closing balance ---
+	# Entries are ordered newest-first; the first row therefore shows the closing balance.
+	balance = closing_balance
+	for entry in entries:
 		entry["balance"] = flt(balance)
-		total_debit += entry["debit"]
-		total_credit += entry["credit"]
-
-	closing_balance = opening_balance + total_debit - total_credit
-
-	# Reverse for display (newest first)
-	entries.reverse()
+		balance -= entry["debit"] - entry["credit"]
 
 	currency = None
 	if company:

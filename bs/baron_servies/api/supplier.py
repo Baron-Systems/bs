@@ -164,10 +164,12 @@ def create_supplier_payment(supplier, company, amount, mode_of_payment="Cash", p
 	pe.insert(ignore_permissions=True)
 	pe.submit()
 
+	summary = get_supplier_financial_summary(supplier, company)
 	return {
 		"payment_entry": pe.name,
 		"amount": amount,
 		"supplier": supplier,
+		"updated_summary": summary,
 	}
 
 

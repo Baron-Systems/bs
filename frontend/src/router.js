@@ -25,6 +25,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/quick-purchase-invoice',
+    name: 'QuickPurchaseInvoice',
+    component: () => import('@/pages/QuickPurchaseInvoice.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/customer-report',
     name: 'CustomerReport',
     component: () => import('@/pages/CustomerReport.vue'),
@@ -35,6 +41,18 @@ const routes = [
     name: 'CustomerPayment',
     component: () => import('@/pages/CustomerPayment.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/customer-portal/login',
+    name: 'CustomerPortalLogin',
+    component: () => import('@/pages/CustomerPortalLogin.vue'),
+    meta: { requiresAuth: false },
+  },
+  {
+    path: '/customer-portal',
+    name: 'CustomerPortal',
+    component: () => import('@/pages/CustomerPortal.vue'),
+    meta: { requiresAuth: false },
   },
   {
     path: '/supplier-payment',
@@ -52,6 +70,12 @@ const routes = [
     path: '/store',
     name: 'Storefront',
     component: () => import('@/pages/Storefront.vue'),
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/pages/Settings.vue'),
+    meta: { requiresAuth: true },
   },
 ]
 

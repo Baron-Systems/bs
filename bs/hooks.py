@@ -5,6 +5,11 @@ app_description = "muilty services from baron"
 app_email = "info@albaronsystems.com"
 app_license = "mit"
 
+website_redirects = [
+	{"source": "/portal", "target": "/bs/customer-portal"},
+	{"source": "/portal/*", "target": "/bs/customer-portal"},
+]
+
 # Apps
 # ------------------
 

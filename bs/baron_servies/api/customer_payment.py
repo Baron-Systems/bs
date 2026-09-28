@@ -183,16 +183,23 @@ def create_customer_payment(customer, company, amount, mode_of_payment="Cash", p
 		pe.received_amount = amount
 		pe.remarks = _("Payment - {0}").format(mode_of_payment)
 
-		outstanding_invoices = frappe.get_all(
-			"Sales Invoice",
-			filters={"customer": customer, "company": company, "docstatus": 1, "outstanding_amount": [">", 0]},
-			fields=["name", "outstanding_amount", "grand_total", "posting_date"],
-			order_by="posting_date asc",
-		)
-
+		# Fetch outstanding invoices in batches so we don't load thousands of rows
+		# for high-volume customers (e.g. cash/POS customer).
 		allocated = []
-		if outstanding_invoices:
-			remaining = amount
+		remaining = amount
+		batch_size = 50
+		start = 0
+		while remaining > 0.005:
+			outstanding_invoices = frappe.get_all(
+				"Sales Invoice",
+				filters={"customer": customer, "company": company, "docstatus": 1, "outstanding_amount": [">", 0]},
+				fields=["name", "outstanding_amount", "grand_total", "posting_date"],
+				order_by="posting_date asc",
+				limit_page_length=batch_size,
+				limit_start=start,
+			)
+			if not outstanding_invoices:
+				break
 			for inv in outstanding_invoices:
 				if remaining <= 0.005:
 					break
@@ -208,6 +215,7 @@ def create_customer_payment(customer, company, amount, mode_of_payment="Cash", p
 				})
 				allocated.append({"invoice": inv.name, "amount": alloc})
 				remaining -= alloc
+			start += batch_size
 	else:
 		pe.paid_from = account_info.get("account")
 		pe.paid_to = company_doc.default_receivable_account

@@ -195,12 +195,12 @@
 					</div>
 					<button
 						v-if="showLastMonth"
-						@click="showLastMonth = false"
+						@click="toggleDateRange"
 						class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/30"
 					>{{ __("إظهار الكل") }}</button>
 					<button
 						v-else
-						@click="showLastMonth = true"
+						@click="toggleDateRange"
 						class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
 					>{{ __("آخر شهر") }}</button>
 					<button
@@ -398,6 +398,7 @@ onMounted(async () => {
 		return
 	}
 	await loadCompanies()
+	fromDate.value = getDefaultFromDate()
 })
 
 // Methods
@@ -473,17 +474,26 @@ function selectCustomer(c) {
 	loadData()
 }
 
-async function loadData() {
+async function loadData(opts = {}) {
 	const cust = selectedCustomer.value?.name || selectedCustomer.value
 	if (!cust || !selectedCompany.value) return
 	loading.value = true
 	try {
-		const [sumResult, ledgerResult, lhResult] = await Promise.all([
-			call("bs.baron_servies.api.customer_payment.get_customer_financial_summary", { customer: cust, company: selectedCompany.value }),
-			call("bs.baron_servies.api.ledger_report.get_party_ledger", { party_type: "Customer", party: cust, company: selectedCompany.value, from_date: fromDate.value || undefined, limit: 1000 }),
-			call("bs.baron_servies.api.utilities.get_company_letterhead", { company: selectedCompany.value }),
-		])
-		summary.value = sumResult || { outstanding_balance: 0, currency: "" }
+		const calls = []
+		if (!opts.skipSummary) {
+			calls.push(call("bs.baron_servies.api.customer_payment.get_customer_financial_summary", { customer: cust, company: selectedCompany.value }))
+		}
+		calls.push(call("bs.baron_servies.api.ledger_report.get_party_ledger", { party_type: "Customer", party: cust, company: selectedCompany.value, from_date: fromDate.value || undefined, limit: 1000 }))
+		calls.push(call("bs.baron_servies.api.utilities.get_company_letterhead", { company: selectedCompany.value }))
+
+		const results = await Promise.all(calls)
+		let sumResult, ledgerResult, lhResult
+		if (opts.skipSummary) {
+			[ledgerResult, lhResult] = results
+		} else {
+			[sumResult, ledgerResult, lhResult] = results
+			summary.value = sumResult || { outstanding_balance: 0, currency: "" }
+		}
 		ledger.value = ledgerResult || { opening_balance: 0, closing_balance: 0, total_debit: 0, total_credit: 0, entries: [], currency: summary.value.currency || "" }
 		if (!ledger.value.currency && summary.value.currency) ledger.value.currency = summary.value.currency
 		letterhead.value = lhResult || { content: "", footer: "" }
@@ -508,7 +518,8 @@ async function executePayment() {
 		})
 		showSuccess(__("تم إنشاء الدفع {0} بنجاح", [result.payment_entry]))
 		paymentAmount.value = null
-		await loadData()
+		if (result.updated_summary) summary.value = result.updated_summary
+		await loadData({ skipSummary: true })
 	} catch (e) {
 		showError(e?.message || __("فشل إنشاء الدفع"))
 	} finally {
@@ -556,6 +567,19 @@ function formatCurrency(value) {
 	const n = Number(value || 0)
 	const cur = summary.value.currency || ""
 	return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + (cur ? " " + cur : "")
+}
+
+function getDefaultFromDate() {
+	const d = new Date()
+	d.setDate(d.getDate() - 30)
+	d.setHours(0, 0, 0, 0)
+	return d.toISOString().split("T")[0]
+}
+
+function toggleDateRange() {
+	showLastMonth.value = !showLastMonth.value
+	fromDate.value = showLastMonth.value ? getDefaultFromDate() : ""
+	if (selectedCustomer.value) loadData()
 }
 
 function formatDate(date) {
