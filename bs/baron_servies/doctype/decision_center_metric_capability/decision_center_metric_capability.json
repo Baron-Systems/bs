@@ -1,0 +1,184 @@
+{
+ "actions": [],
+ "autoname": "field:metric_key",
+ "creation": "2026-10-05 15:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "metric_key",
+  "metric_label_ar",
+  "metric_label_en",
+  "category",
+  "unit",
+  "system_controlled_section",
+  "system_available",
+  "enabled_for_plans",
+  "unavailable_reason",
+  "formula_description",
+  "calculation_module",
+  "baseline_strategy",
+  "progress_strategy",
+  "is_negative_good",
+  "requires_snapshot",
+  "schema_version"
+ ],
+ "fields": [
+  {
+   "fieldname": "metric_key",
+   "fieldtype": "Data",
+   "label": "Metric Key",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "metric_label_ar",
+   "fieldtype": "Data",
+   "label": "Arabic Label",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "metric_label_en",
+   "fieldtype": "Data",
+   "label": "English Label"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "label": "Category",
+   "options": "sales\npurchases\ninventory\ncustomers\nexpenses\nfinancial",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Select",
+   "label": "Unit",
+   "options": "currency\nquantity\npercent\ndays\nratio",
+   "reqd": 1
+  },
+  {
+   "fieldname": "system_controlled_section",
+   "fieldtype": "Section Break",
+   "label": "System Controlled"
+  },
+  {
+   "fieldname": "system_available",
+   "fieldtype": "Check",
+   "label": "System Available",
+   "read_only": 1,
+   "default": 0
+  },
+  {
+   "fieldname": "enabled_for_plans",
+   "fieldtype": "Check",
+   "label": "Enabled for Plans",
+   "default": 0,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "unavailable_reason",
+   "fieldtype": "Small Text",
+   "label": "Unavailable Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "formula_description",
+   "fieldtype": "Text",
+   "label": "Formula Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "calculation_module",
+   "fieldtype": "Data",
+   "label": "Calculation Module / Function",
+   "read_only": 1
+  },
+  {
+   "fieldname": "baseline_strategy",
+   "fieldtype": "Select",
+   "label": "Baseline Strategy",
+   "options": "previous_equivalent_period\naverage_previous_3_periods\nsnapshot_at_plan_start\nmanual_only",
+   "read_only": 1
+  },
+  {
+   "fieldname": "progress_strategy",
+   "fieldtype": "Select",
+   "label": "Progress Strategy",
+   "options": "level\ncumulative_growth\ncumulative_ceiling",
+   "read_only": 1
+  },
+  {
+   "fieldname": "is_negative_good",
+   "fieldtype": "Check",
+   "label": "Is Negative Good",
+   "read_only": 1
+  },
+  {
+   "fieldname": "requires_snapshot",
+   "fieldtype": "Check",
+   "label": "Requires Snapshot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "schema_version",
+   "fieldtype": "Data",
+   "label": "Schema Version",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-10-05 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "Decision Center Metric Capability",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "All",
+   "share": 0,
+   "write": 0
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Decision Center User",
+   "share": 0,
+   "write": 0
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Decision Center Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "metric_key",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}

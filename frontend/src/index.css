@@ -1,2 +1,227 @@
 @import './assets/Inter/inter.css';
 @import 'frappe-ui/src/style.css';
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Baron design layer — shared tokens and primitives for every page.
+   Pages use these classes (bs-card, bs-input, bs-btn …) instead of
+   repeating long utility strings, so the whole app stays consistent.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+	--bs-font: "Cairo", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--bs-page: #f6f7f9;
+	--bs-surface: #ffffff;
+	--bs-border: rgba(15, 23, 42, 0.08);
+	--bs-border-strong: rgba(15, 23, 42, 0.14);
+	--bs-ink: #0f172a;
+	--bs-ink-2: #475569;
+	--bs-ink-3: #94a3b8;
+	--bs-brand: #2563eb;
+	--bs-brand-ink: #1d4ed8;
+	--bs-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+	--bs-shadow-md: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
+	--bs-shadow-lg: 0 12px 32px -12px rgba(15, 23, 42, 0.22);
+}
+
+html,
+body {
+	font-family: var(--bs-font);
+	background: var(--bs-page);
+	color: var(--bs-ink);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body * {
+	font-family: inherit;
+}
+
+::selection {
+	background: rgba(37, 99, 235, 0.15);
+}
+
+/* Thin, quiet scrollbars */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
+}
+*::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+	background: rgba(100, 116, 139, 0.3);
+	border-radius: 999px;
+	border: 2px solid transparent;
+	background-clip: content-box;
+}
+
+@layer components {
+	/* ── Surfaces ── */
+	.bs-card {
+		@apply rounded-2xl border bg-white;
+		border-color: var(--bs-border);
+		box-shadow: var(--bs-shadow-sm);
+	}
+	.bs-card-pad {
+		@apply p-4 sm:p-5;
+	}
+	.bs-card-header {
+		@apply mb-4 flex flex-wrap items-center justify-between gap-3;
+	}
+	.bs-card-title {
+		@apply text-[14px] font-bold text-slate-800;
+	}
+	.bs-card-subtitle {
+		@apply mt-0.5 text-[11px] text-slate-400;
+	}
+	.bs-soft {
+		@apply rounded-xl border bg-slate-50/70;
+		border-color: var(--bs-border);
+	}
+
+	/* ── Form controls ── */
+	.bs-label {
+		@apply mb-1.5 block text-[12px] font-semibold text-slate-600;
+	}
+	.bs-input {
+		@apply w-full rounded-xl border bg-white px-3 py-2.5 text-sm text-slate-800 transition placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400;
+		border-color: var(--bs-border-strong);
+	}
+	.bs-input-sm {
+		@apply rounded-lg px-2.5 py-1.5 text-xs;
+	}
+
+	/* ── Buttons ── */
+	.bs-btn {
+		@apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-50;
+	}
+	.bs-btn-sm {
+		@apply rounded-lg px-3 py-1.5 text-xs;
+	}
+	.bs-btn-primary {
+		@apply bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:ring-blue-500/25;
+	}
+	.bs-btn-dark {
+		@apply bg-slate-900 text-white shadow-sm hover:bg-slate-800 focus-visible:ring-slate-500/25;
+	}
+	.bs-btn-success {
+		@apply bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 focus-visible:ring-emerald-500/25;
+	}
+	.bs-btn-danger {
+		@apply bg-rose-600 text-white shadow-sm hover:bg-rose-700 focus-visible:ring-rose-500/25;
+	}
+	.bs-btn-secondary {
+		@apply border bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:ring-slate-500/20;
+		border-color: var(--bs-border-strong);
+	}
+	.bs-btn-ghost {
+		@apply text-slate-600 hover:bg-slate-100 hover:text-slate-900;
+	}
+	.bs-icon-btn {
+		@apply inline-flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800;
+	}
+
+	/* ── Segmented control (tabs / period chips) ── */
+	.bs-segment {
+		@apply flex gap-1 overflow-x-auto rounded-2xl border bg-white p-1;
+		border-color: var(--bs-border);
+		box-shadow: var(--bs-shadow-sm);
+	}
+	.bs-segment-item {
+		@apply whitespace-nowrap rounded-xl px-3.5 py-2 text-[13px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-800;
+	}
+	.bs-segment-item-active {
+		@apply bg-slate-900 text-white shadow hover:bg-slate-900 hover:text-white;
+	}
+
+	/* ── Tables ── */
+	.bs-table {
+		@apply min-w-full text-[13px];
+	}
+	.bs-table thead th {
+		@apply whitespace-nowrap bg-slate-50 px-3 py-2.5 text-[11px] font-semibold text-slate-500;
+		border-bottom: 1px solid var(--bs-border);
+	}
+	.bs-table tbody td {
+		@apply px-3 py-2.5 text-slate-700;
+	}
+	.bs-table tbody tr {
+		border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+	}
+	.bs-table tbody tr:last-child {
+		border-bottom: 0;
+	}
+	.bs-table tbody tr:hover {
+		@apply bg-slate-50/70;
+	}
+	.bs-table-wrap {
+		@apply overflow-auto rounded-xl border;
+		border-color: var(--bs-border);
+	}
+
+	/* ── Badges ── */
+	.bs-badge {
+		@apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold;
+	}
+	.bs-badge-neutral { @apply bg-slate-100 text-slate-600; }
+	.bs-badge-blue { @apply bg-blue-50 text-blue-700; }
+	.bs-badge-green { @apply bg-emerald-50 text-emerald-700; }
+	.bs-badge-amber { @apply bg-amber-50 text-amber-700; }
+	.bs-badge-red { @apply bg-rose-50 text-rose-700; }
+
+	/* ── Stat tile ── */
+	.bs-stat {
+		@apply rounded-xl border bg-white p-3;
+		border-color: var(--bs-border);
+	}
+	.bs-stat-label {
+		@apply text-[11px] font-semibold text-slate-500;
+	}
+	.bs-stat-value {
+		@apply mt-1 text-base font-extrabold tracking-tight text-slate-900;
+	}
+
+	/* ── Popover / dropdown ── */
+	.bs-popover {
+		@apply rounded-xl border bg-white;
+		border-color: var(--bs-border);
+		box-shadow: var(--bs-shadow-lg);
+	}
+
+	/* ── Empty state ── */
+	.bs-empty {
+		@apply flex flex-col items-center justify-center gap-2 py-12 text-center text-sm text-slate-400;
+	}
+}
+
+/* ── Select arrow (app-wide) ──
+   @tailwindcss/forms always draws the arrow on the right with right padding. In RTL the
+   text starts on the right, so it ran under the arrow — and utilities like px-3 removed
+   the reserved space anyway. Keep the arrow on the inline-end side with room for it. */
+select:not([multiple]):not([size]) {
+	background-position: right 0.6rem center;
+	background-size: 1.25em 1.25em;
+	padding-right: 2.25rem !important;
+}
+[dir="rtl"] select:not([multiple]):not([size]) {
+	background-position: left 0.6rem center;
+	padding-left: 2.25rem !important;
+	padding-right: 0.75rem !important;
+}
+/* separate rule: older browsers drop a whole selector list containing :dir() */
+select:not([multiple]):not([size]):dir(rtl) {
+	background-position: left 0.6rem center;
+	padding-left: 2.25rem !important;
+	padding-right: 0.75rem !important;
+}
+
+/* ── Dialog stacking (app-wide) ──
+   frappe-ui's Dialog root is `fixed z-10`, below the sticky header (z-40), sticky toolbars
+   (z-20) and the mobile drawer (z-50), so those showed through open dialogs. Lift every
+   dialog above the app chrome (toasts stay on top at z-[9999]).
+   Only the dialog root (role="dialog") — the overlay/panel ids share the same prefix and
+   must keep their own stacking, or the dimmed overlay ends up covering the panel. */
+[role="dialog"][id^="headlessui-dialog-"].fixed.inset-0 {
+	z-index: 60 !important;
+}

@@ -1,33 +1,7 @@
 <template>
-<div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" dir="rtl">
-<!-- Header -->
-<header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-<div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-<div class="flex items-center gap-3 min-w-0">
-<button
-@click="goBack"
-class="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 flex-shrink-0"
-aria-label="رجوع"
->
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-</svg>
-</button>
-<div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-slate-500/30">
-<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-</svg>
-</div>
-<div class="min-w-0">
-<h1 class="text-base sm:text-lg font-bold text-slate-900 truncate">{{ __("إعدادات الصفحة الرئيسية") }}</h1>
-<p class="text-xs text-slate-500 truncate">{{ __("تفعيل البطاقات وتحديد المستخدمين - مسموح للمدير فقط") }}</p>
-</div>
-</div>
-</div>
-</header>
-
-<main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+<div class="w-full">
+<main class="flex flex-col gap-5">
+<PageHeader :title="__('إعدادات الصفحة الرئيسية')" :subtitle="__('تفعيل البطاقات وتحديد المستخدمين - مسموح للمدير فقط')" />
 <!-- Unauthorized -->
 <div v-if="!isAdmin" class="bg-rose-50 border border-rose-200 rounded-2xl p-6 text-center">
 <p class="text-rose-700 font-semibold">{{ __("غير مصرح") }}</p>
@@ -47,17 +21,17 @@ aria-label="رجوع"
 </div>
 
 <template v-else>
-<div class="bg-white border border-slate-200 rounded-2xl shadow-md overflow-hidden mb-4">
+<div class="bs-card overflow-hidden mb-4">
 <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-2">
 <h2 class="font-bold text-slate-800">{{ __("البطاقات المتاحة") }}</h2>
 <div class="flex items-center gap-2">
 <button
 @click="enableAll"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
 >{{ __("تفعيل الكل") }}</button>
 <button
 @click="disableAll"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
 >{{ __("إخفاء الكل") }}</button>
 </div>
 </div>
@@ -117,7 +91,7 @@ v-model="userSearch[card.id]"
 @input="onUserSearchInput(card)"
 @focus="onUserSearchInput(card)"
 :placeholder="__('ابحث باسم المستخدم أو البريد')"
-class="w-full sm:w-80 border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all"
+class="bs-input bs-input-sm w-full sm:w-80 px-3 py-2 text-xs"
 />
 <div
 v-if="(userResults[card.id] || []).length && userSearchFocused[card.id]"
@@ -142,13 +116,12 @@ class="w-full text-start px-3 py-2 text-xs hover:bg-blue-50 transition-colors bo
 </div>
 </div>
 </div>
-</div>
 
 <div class="flex justify-end">
 <button
 @click="saveSettings"
 :disabled="saving"
-class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm"
 >
 <svg v-if="saving" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -157,6 +130,7 @@ class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-l from
 {{ saving ? __("جاري الحفظ...") : __("حفظ الإعدادات") }}
 </button>
 </div>
+</div>
 </template>
 </template>
 </main>
@@ -164,9 +138,9 @@ class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-l from
 </template>
 
 <script setup>
+import PageHeader from "@/components/ui/PageHeader.vue"
 import { call } from "@/utils/apiWrapper"
 import { useToast } from "@/composables/useToast"
-import router from "@/router"
 import { session } from "@/data/session"
 import { onMounted, onBeforeUnmount, ref } from "vue"
 
@@ -306,7 +280,4 @@ saving.value = false
 }
 }
 
-function goBack() {
-router.push({ name: "Home" })
-}
 </script>

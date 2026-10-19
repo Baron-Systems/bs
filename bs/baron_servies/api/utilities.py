@@ -75,7 +75,20 @@ _DEFAULT_HOME_CARDS = [
 	{"id": "store_manage", "label": "إدارة المتجر", "route": "StoreManage", "type": "route", "enabled": 1, "users": []},
 	{"id": "customer_portal", "label": "بوابة العميل", "route": "CustomerPortalLogin", "type": "route", "enabled": 1, "users": []},
 	{"id": "storefront", "label": "المتجر", "route": "/bs/store", "type": "link", "enabled": 1, "users": []},
+	{"id": "decision_center", "label": "مركز القرار", "route": "DecisionCenter", "type": "route", "enabled": 1, "users": []},
 ]
+
+# Employees section — also appended to stored configs by bs.patches.add_employees_services
+EMPLOYEE_CARDS = [
+	{"id": "employees", "label": "الموظفون", "route": "EmployeesList", "type": "route", "enabled": 1, "users": []},
+	{"id": "employee_payroll", "label": "الاستحقاقات", "route": "EmployeePayroll", "type": "route", "enabled": 1, "users": []},
+	{"id": "employee_attendance", "label": "الدوام", "route": "EmployeeAttendance", "type": "route", "enabled": 1, "users": []},
+	{"id": "employee_advances", "label": "السلف", "route": "EmployeeAdvances", "type": "route", "enabled": 1, "users": []},
+	{"id": "employee_leaves", "label": "الإجازات", "route": "EmployeeLeaves", "type": "route", "enabled": 1, "users": []},
+	{"id": "employee_settings", "label": "إعدادات الموظفين", "route": "EmployeeSettings", "type": "route", "enabled": 1, "users": []},
+]
+
+_DEFAULT_HOME_CARDS.extend(EMPLOYEE_CARDS)
 
 
 @frappe.whitelist()

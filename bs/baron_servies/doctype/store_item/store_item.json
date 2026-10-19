@@ -12,6 +12,7 @@
   "stock_uom",
   "column_break_1",
   "is_published",
+  "is_unavailable",
   "display_order",
   "max_order_qty",
   "section_pricing",
@@ -64,6 +65,13 @@
    "in_list_view": 1
   },
   {
+   "fieldname": "is_unavailable",
+   "fieldtype": "Check",
+   "label": "Temporarily Unavailable",
+   "default": "0",
+   "description": "Shown as sold out in the store regardless of stock."
+  },
+  {
    "fieldname": "display_order",
    "fieldtype": "Int",
    "label": "Display Order",
@@ -99,7 +107,7 @@
  ],
  "index_web_pages_for_search": 0,
  "links": [],
- "modified": "2026-08-25 16:00:00.000000",
+ "modified": "2026-10-19 18:00:00.000000",
  "modified_by": "Administrator",
  "module": "Baron servies",
  "name": "Store Item",

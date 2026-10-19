@@ -1,63 +1,15 @@
 <template>
-	<div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" dir="rtl">
-		<!-- Header -->
-		<header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-			<div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-				<div class="flex items-center gap-3 min-w-0">
-					<button
-						@click="goBack"
-						class="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 flex-shrink-0"
-						:aria-label="__('رجوع')"
-					>
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-						</svg>
-					</button>
-					<div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-amber-500/30">
-						<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-						</svg>
-					</div>
-					<div class="min-w-0">
-						<h1 class="text-base sm:text-lg font-bold text-slate-900 truncate">
-							{{ __("دفع العميل") }}
-						</h1>
-						<p class="text-xs text-slate-500 truncate">
-							{{ __("قبض من العميل أو الدفع له") }}
-						</p>
-					</div>
-				</div>
-				<div class="flex items-center gap-2 flex-shrink-0">
-					<div class="hidden sm:flex items-center gap-2 bg-slate-100 rounded-full px-3 py-1.5">
-						<div class="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-							{{ userInitial }}
-						</div>
-						<span class="text-xs font-medium text-slate-700">{{ userName }}</span>
-					</div>
-					<button
-						@click="logout"
-						class="p-2 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all hover:scale-105 active:scale-95"
-						:aria-label="__('تسجيل الخروج')"
-						:title="__('تسجيل الخروج')"
-					>
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-						</svg>
-					</button>
-				</div>
-			</div>
-		</header>
-
-		<!-- Main Content -->
-		<main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-4">
+	<div class="w-full">
+		<main class="flex flex-col gap-5">
+			<PageHeader :title="__('دفع العميل')" :subtitle="__('قبض من العميل أو الدفع له')" />
 			<!-- Company Selector -->
-			<section class="bg-white rounded-2xl border border-slate-200 shadow-md p-4">
+			<section class="bs-card p-4">
 				<div class="flex flex-col sm:flex-row gap-3 items-end">
 					<div class="flex-1 w-full">
-						<label class="block text-xs font-semibold text-slate-700 mb-1.5">{{ __("الشركة") }}</label>
+						<label class="bs-label">{{ __("الشركة") }}</label>
 						<select
 							v-model="selectedCompany"
-							class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all"
+							class="bs-input w-full px-3 py-2.5"
 							:disabled="loadingCompanies"
 							@change="onCompanyChange"
 						>
@@ -69,15 +21,15 @@
 			</section>
 
 			<!-- Customer Search -->
-			<section class="bg-white rounded-2xl border border-slate-200 shadow-md p-4">
-				<label class="block text-xs font-semibold text-slate-700 mb-1.5">{{ __("بحث عن عميل") }}</label>
+			<section class="bs-card p-4">
+				<label class="bs-label">{{ __("بحث عن عميل") }}</label>
 				<div class="relative">
 					<input
 						ref="searchInputRef"
 						v-model="searchQuery"
 						type="text"
 						:placeholder="__('اسم العميل، الجوال، البريد...')"
-						class="w-full border border-slate-300 rounded-xl ps-10 pe-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+						class="bs-input w-full ps-10 pe-3 py-2.5"
 						@input="onSearchInput"
 						@keydown.enter.prevent="selectFirstCustomer"
 						@keydown.arrow-down.prevent="navigateCustomers(1)"
@@ -88,7 +40,7 @@
 					</svg>
 					<div
 						v-if="showResults && searchResults.length > 0"
-						class="absolute top-full inset-x-0 z-30 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-60 overflow-auto"
+						class="bs-popover absolute top-full inset-x-0 z-30 mt-1 rounded-xl max-h-60 overflow-auto"
 					>
 					<button
 						v-for="(c, idx) in searchResults"
@@ -113,7 +65,7 @@
 					</div>
 					<div
 						v-else-if="showResults && searchQuery.trim() && !searching && searchResults.length === 0"
-						class="absolute top-full inset-x-0 z-30 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 text-sm text-slate-500"
+						class="bs-popover absolute top-full inset-x-0 z-30 mt-1 rounded-xl p-3 text-sm text-slate-500"
 					>
 						{{ __("لا توجد نتائج") }}
 					</div>
@@ -121,10 +73,10 @@
 			</section>
 
 			<!-- Payment Area -->
-			<section v-if="selectedCustomer" class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 sm:p-5 shadow-md">
+			<section v-if="selectedCustomer" class="border border-amber-200 rounded-2xl p-4 sm:p-5 shadow-sm bg-amber-50/60">
 				<div class="flex items-center justify-between mb-4 gap-3">
 					<div class="min-w-0 flex items-center gap-3">
-						<div class="w-11 h-11 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-amber-500/30">
+						<div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 bg-amber-600 shadow-sm">
 							<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
 							</svg>
@@ -145,11 +97,11 @@
 
 				<div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
 					<div class="flex-1">
-						<label class="block text-xs font-semibold text-slate-700 mb-1.5">{{ __("المبلغ") }}</label>
+						<label class="bs-label">{{ __("المبلغ") }}</label>
 						<input
 							v-model.number="paymentAmount"
 							type="number"
-							class="payment-amount-input w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white transition-all"
+							class="bs-input payment-amount-input w-full px-3 py-2.5"
 							:placeholder="__('أدخل المبلغ (سالب = دفع للعميل)')"
 							step="0.01"
 							@keyup.enter="executePayment"
@@ -159,10 +111,10 @@
 						@click="executePayment"
 						:disabled="paying || !paymentAmount || paymentAmount === 0"
 						:class="[
-							'px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 whitespace-nowrap',
+							'px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap',
 							paymentAmount < 0
-								? 'bg-gradient-to-l from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 shadow-rose-500/30'
-								: 'bg-gradient-to-l from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-emerald-500/30'
+								? 'bg-rose-600 hover:bg-rose-700 shadow-sm'
+								: 'bg-emerald-600 hover:bg-emerald-700 shadow-sm'
 						]"
 					>
 						<svg v-if="paying" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
@@ -175,7 +127,7 @@
 			</section>
 
 			<!-- Customer Statement (General Ledger) -->
-		<section v-if="selectedCustomer" class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-md">
+		<section v-if="selectedCustomer" class="bs-card p-4 sm:p-5">
 			<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
 				<h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
 					<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,22 +142,22 @@
 							type="date"
 							v-model="fromDate"
 							@change="loadData"
-							class="border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all"
+							class="bs-input bs-input-sm px-2 py-1 text-xs"
 						/>
 					</div>
 					<button
 						v-if="showLastMonth"
 						@click="toggleDateRange"
-						class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/30"
+						class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-all bg-blue-600 hover:bg-blue-700 shadow-sm"
 					>{{ __("إظهار الكل") }}</button>
 					<button
 						v-else
 						@click="toggleDateRange"
-						class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
+						class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
 					>{{ __("آخر شهر") }}</button>
 					<button
 						@click="printReport"
-						class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-1.5"
+						class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-1.5"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -237,7 +189,7 @@
 
 			<div class="overflow-auto max-h-[400px] rounded-xl border border-slate-100">
 				<table v-if="filteredEntries.length" class="min-w-full text-xs">
-					<thead class="bg-gradient-to-l from-slate-100 to-blue-50 sticky top-0">
+					<thead class="sticky top-0 bg-slate-50/60">
 						<tr>
 							<th class="px-1 py-2.5 text-center font-bold text-slate-700 w-8"></th>
 							<th class="px-2 py-2.5 text-start font-bold text-slate-700">{{ __("التاريخ") }}</th>
@@ -269,7 +221,7 @@
 									</button>
 								</td>
 								<td class="px-2 py-2 text-slate-600 whitespace-nowrap">{{ formatDate(e.posting_date) }}</td>
-								<td class="px-2 py-2 text-slate-700">{{ formatVoucherType(e.voucher_type) }}</td>
+								<td class="px-2 py-2 text-slate-700">{{ formatVoucherType(e.voucher_type, e.voucher_subtype) }}</td>
 								<td class="px-2 py-2 font-semibold text-slate-900">
 									<a :href="glDocUrl(e)" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">{{ e.voucher_no }}</a>
 								</td>
@@ -304,7 +256,7 @@
 								</td>
 							</tr>
 						</template>
-						<tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
+						<tr class="bg-slate-100 font-bold border-t-2 border-slate-200">
 							<td colspan="4" class="px-2 py-2 text-slate-800">{{ __("الإجمالي") }}</td>
 							<td class="px-2 py-2 text-end text-blue-700">{{ formatCurrency(ledger.total_debit) }}</td>
 							<td class="px-2 py-2 text-end text-emerald-700">{{ formatCurrency(ledger.total_credit) }}</td>
@@ -322,8 +274,8 @@
 		</section>
 
 			<!-- Empty State -->
-			<div v-if="!selectedCustomer" class="bg-white rounded-2xl border border-slate-200 shadow-md p-12 flex flex-col items-center justify-center gap-3">
-				<div class="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl flex items-center justify-center">
+			<div v-if="!selectedCustomer" class="bs-card p-12 flex flex-col items-center justify-center gap-3">
+				<div class="w-16 h-16 rounded-2xl flex items-center justify-center bg-amber-50/60">
 					<svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
 					</svg>
@@ -335,22 +287,16 @@
 </template>
 
 <script setup>
+import PageHeader from "@/components/ui/PageHeader.vue"
 import { Button } from "frappe-ui"
 import { call } from "@/utils/apiWrapper"
-import { useUserData } from "@/data/user"
 import { session } from "@/data/session"
 import { useToast } from "@/composables/useToast"
 import router from "@/router"
 import { computed, onMounted, ref } from "vue"
 
-const { userName } = useUserData()
 const { showSuccess, showError } = useToast()
 
-const userInitial = computed(() => {
-	const name = userName.value || "User"
-	const parts = String(name).split(" ").filter(Boolean)
-	return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase()
-})
 
 // State
 const companies = ref([])
@@ -497,6 +443,7 @@ async function loadData(opts = {}) {
 		ledger.value = ledgerResult || { opening_balance: 0, closing_balance: 0, total_debit: 0, total_credit: 0, entries: [], currency: summary.value.currency || "" }
 		if (!ledger.value.currency && summary.value.currency) ledger.value.currency = summary.value.currency
 		letterhead.value = lhResult || { content: "", footer: "" }
+		expandAllInvoices()
 	} catch (e) {
 		showError(e?.message || __("فشل تحميل البيانات"))
 	} finally {
@@ -531,6 +478,44 @@ function isInvoice(voucher_type) {
 	return voucher_type === "Sales Invoice" || voucher_type === "Purchase Invoice"
 }
 
+// Invoice details are shown by default: open every invoice row and load all items in one call.
+async function expandAllInvoices() {
+	const invoices = []
+	const seen = new Set()
+	for (const e of ledger.value.entries || []) {
+		if (isInvoice(e.voucher_type) && e.voucher_no && !seen.has(e.voucher_no)) {
+			seen.add(e.voucher_no)
+			invoices.push({ voucher_type: e.voucher_type, voucher_no: e.voucher_no })
+		}
+	}
+	const expanded = {}
+	invoices.forEach((v) => { expanded[v.voucher_no] = true })
+	expandedRows.value = expanded
+
+	const missing = invoices.filter((v) => !rowItems.value[v.voucher_no])
+	if (!missing.length) return
+	const loadingMap = { ...rowItemsLoading.value }
+	missing.forEach((v) => { loadingMap[v.voucher_no] = true })
+	rowItemsLoading.value = loadingMap
+	try {
+		const byVoucher = await call("bs.baron_servies.api.ledger_report.get_vouchers_items", {
+			vouchers: JSON.stringify(missing),
+		}) || {}
+		const items = { ...rowItems.value }
+		missing.forEach((v) => { items[v.voucher_no] = byVoucher[v.voucher_no] || [] })
+		rowItems.value = items
+	} catch (err) {
+		// rows stay expandable one by one through toggleExpand
+		const expandedNow = { ...expandedRows.value }
+		missing.forEach((v) => { delete expandedNow[v.voucher_no] })
+		expandedRows.value = expandedNow
+	} finally {
+		const done = { ...rowItemsLoading.value }
+		missing.forEach((v) => { done[v.voucher_no] = false })
+		rowItemsLoading.value = done
+	}
+}
+
 async function toggleExpand(e) {
 	const no = e.voucher_no
 	if (!no) return
@@ -554,13 +539,6 @@ async function toggleExpand(e) {
 	}
 }
 
-function goBack() {
-	router.push({ name: "Home" })
-}
-
-async function logout() {
-	await session.logout.submit()
-}
 
 // Formatters
 function formatCurrency(value) {
@@ -587,14 +565,23 @@ function formatDate(date) {
 	return new Date(date).toLocaleDateString("en-GB")
 }
 
-function formatVoucherType(voucher_type) {
+// The ledger sends voucher_subtype (Receive / Pay / Credit Note / Debit Note …) so a receipt
+// is not labelled as a payment and returns are distinguishable from invoices.
+function formatVoucherType(voucher_type, voucher_subtype) {
+	const bySubtype = {
+		"Payment Entry|Receive": __("قبض"),
+		"Payment Entry|Pay": __("دفع"),
+		"Payment Entry|Internal Transfer": __("تحويل داخلي"),
+		"Sales Invoice|Credit Note": __("مرتجع مبيعات"),
+		"Purchase Invoice|Debit Note": __("مرتجع مشتريات"),
+	}
 	const map = {
 		"Sales Invoice": __("فاتورة مبيعات"),
 		"Purchase Invoice": __("فاتورة مشتريات"),
 		"Payment Entry": __("دفعة"),
 		"Journal Entry": __("قيد يومية"),
 	}
-	return map[voucher_type] || voucher_type || ""
+	return bySubtype[`${voucher_type}|${voucher_subtype}`] || map[voucher_type] || voucher_type || ""
 }
 
 function glDocUrl(e) {
@@ -605,6 +592,28 @@ function glDocUrl(e) {
 	if (t === "Payment Entry") return `/app/payment-entry/${n}`
 	if (t === "Journal Entry") return `/app/journal-entry/${n}`
 	return `/app/${n}`
+}
+
+// Printed statements include the invoice items that are expanded on screen.
+function escapeHtml(value) {
+	return String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]))
+}
+
+function printItemsRow(e) {
+	if (!isInvoice(e.voucher_type) || !expandedRows.value[e.voucher_no]) return ""
+	const items = rowItems.value[e.voucher_no] || []
+	if (!items.length) return ""
+	const rows = items.map((it) =>
+		"<tr>" +
+			"<td>" + escapeHtml(it.item_name || it.item_code) + "</td>" +
+			'<td class="num">' + escapeHtml(it.qty) + " " + escapeHtml(it.uom || "") + "</td>" +
+			'<td class="num">' + formatCurrency(it.rate) + "</td>" +
+			'<td class="num">' + formatCurrency(it.amount) + "</td>" +
+		"</tr>"
+	).join("")
+	return '<tr class="items"><td colspan="6"><table class="sub"><thead><tr>' +
+		"<th>" + __("الصنف") + '</th><th class="num">' + __("الكمية") + '</th><th class="num">' + __("السعر") + '</th><th class="num">' + __("المبلغ") + "</th>" +
+		"</tr></thead><tbody>" + rows + "</tbody></table></td></tr>"
 }
 
 function printReport() {
@@ -620,12 +629,12 @@ function printReport() {
 	const bodyRows = filteredEntries.value.map((e) => {
 		return "<tr>" +
 			"<td>" + formatDate(e.posting_date) + "</td>" +
-			"<td>" + (formatVoucherType(e.voucher_type)) + "</td>" +
+			"<td>" + (formatVoucherType(e.voucher_type, e.voucher_subtype)) + "</td>" +
 			"<td>" + (e.voucher_no || "") + "</td>" +
 			'<td class="num debit">' + (e.debit ? formatCurrency(e.debit) : "") + "</td>" +
 			'<td class="num credit">' + (e.credit ? formatCurrency(e.credit) : "") + "</td>" +
 			'<td class="num bal">' + formatCurrency(e.balance) + "</td>" +
-		"</tr>"
+		"</tr>" + printItemsRow(e)
 	}).join("")
 
 	const html = `<!DOCTYPE html>
@@ -650,6 +659,11 @@ function printReport() {
   td.debit { color: #1e40af; font-weight: 600; }
   td.credit { color: #047857; font-weight: 600; }
   td.bal { font-weight: 700; }
+  tr.items > td { background: #fafafa; padding: 4px 8px 8px; }
+  table.sub { width: 100%; margin: 0; border-collapse: collapse; }
+  table.sub th, table.sub td { border: 1px solid #eef0f3; padding: 3px 6px; font-size: 10.5px; color: #4b5563; }
+  table.sub th { background: #f3f4f6; font-weight: 600; }
+  tr.items { page-break-inside: avoid; }
   tr.opening td, tr.totals td { background: #f9fafb; font-weight: 700; }
   .footer { margin-top: 24px; text-align: center; font-size: 12px; color: #9ca3af; }
   .letterhead-top { margin-bottom: 12px; }
@@ -680,9 +694,9 @@ function printReport() {
     </tr>
   </thead>
   <tbody>
-    <tr class="opening"><td colspan="4">${__("رصيد افتتاحي")}</td><td colspan="2"></td><td class="num">${opening}</td></tr>
+    <tr class="opening"><td colspan="3">${__("رصيد افتتاحي")}</td><td colspan="2"></td><td class="num">${opening}</td></tr>
     ${bodyRows}
-    <tr class="totals"><td colspan="4">${__("الإجمالي")}</td><td class="num">${totDebit}</td><td class="num">${totCredit}</td><td class="num">${closing}</td></tr>
+    <tr class="totals"><td colspan="3">${__("الإجمالي")}</td><td class="num">${totDebit}</td><td class="num">${totCredit}</td><td class="num">${closing}</td></tr>
   </tbody>
 </table>
 <div class='footer'>${__("كشف حساب العميل - دفتر الأستاذ العام")} · ${cur}</div>

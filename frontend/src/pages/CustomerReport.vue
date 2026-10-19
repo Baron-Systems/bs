@@ -1,55 +1,7 @@
 <template>
-	<div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-emerald-50 to-green-50" dir="rtl">
-		<!-- Header -->
-		<header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-				<div class="flex items-center gap-3 min-w-0">
-					<button
-						@click="goBack"
-						class="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 flex-shrink-0"
-						:aria-label="__('رجوع')"
-					>
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-						</svg>
-					</button>
-					<div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/30">
-						<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-						</svg>
-					</div>
-					<div class="min-w-0">
-						<h1 class="text-base sm:text-lg font-bold text-slate-900 truncate">
-							{{ __("تقرير العميل مفصل") }}
-						</h1>
-						<p class="text-xs text-slate-500 truncate">
-							{{ __("عرض شامل لبيانات العميل") }}
-						</p>
-					</div>
-				</div>
-				<div class="flex items-center gap-2 flex-shrink-0">
-					<div class="hidden sm:flex items-center gap-2 bg-slate-100 rounded-full px-3 py-1.5">
-						<div class="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-							{{ userInitial }}
-						</div>
-						<span class="text-xs font-medium text-slate-700">{{ userName }}</span>
-					</div>
-					<button
-						@click="logout"
-						class="p-2 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all hover:scale-105 active:scale-95"
-						:aria-label="__('تسجيل الخروج')"
-						:title="__('تسجيل الخروج')"
-					>
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-						</svg>
-					</button>
-				</div>
-			</div>
-		</header>
-
-		<!-- Main Content -->
-		<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
+	<div class="w-full">
+		<main class="flex flex-col gap-5">
+			<PageHeader :title="__('تقرير العميل مفصل')" :subtitle="__('عرض شامل لبيانات العميل')" />
 			<!-- Search & Filters -->
 			<section class="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
 				<div class="flex flex-col sm:flex-row gap-3">
@@ -421,22 +373,16 @@
 </template>
 
 <script setup>
+import PageHeader from "@/components/ui/PageHeader.vue"
 import { Button } from "frappe-ui"
 import { call } from "@/utils/apiWrapper"
-import { useUserData } from "@/data/user"
 import { session } from "@/data/session"
 import { useToast } from "@/composables/useToast"
 import router from "@/router"
 import { computed, onMounted, ref } from "vue"
 
-const { userName } = useUserData()
 const { showError } = useToast()
 
-const userInitial = computed(() => {
-	const name = userName.value || "User"
-	const parts = String(name).split(" ").filter(Boolean)
-	return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase()
-})
 
 // State
 const searchQuery = ref("")
@@ -546,13 +492,6 @@ async function loadReport() {
 	}
 }
 
-function goBack() {
-	router.push({ name: "Home" })
-}
-
-async function logout() {
-	await session.logout.submit()
-}
 
 // Formatters
 function formatCurrency(v) {

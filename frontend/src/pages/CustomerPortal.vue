@@ -1,10 +1,10 @@
 <template>
-<div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" dir="rtl">
+<div class="min-h-screen flex flex-col bg-slate-50/60" dir="rtl">
 <!-- Header -->
 <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
 <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
 				<div class="flex items-center gap-3 min-w-0">
-					<div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/30">
+					<div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-blue-600 shadow-sm">
 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
 </svg>
@@ -20,7 +20,7 @@
 </div>
 <button
 @click="logout"
-class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 border border-slate-300 transition-all"
+class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 border border-slate-200 transition-all"
 >
 {{ __("خروج") }}
 </button>
@@ -39,7 +39,7 @@ class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-red-50 hover:text-
 </div>
 </div>
 
-<section v-else class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-md">
+<section v-else class="bs-card p-4 sm:p-5">
 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
 <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +54,7 @@ class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-red-50 hover:text-
 type="date"
 v-model="fromDate"
 @change="loadLedger"
-class="border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all"
+class="bs-input bs-input-sm px-2 py-1 text-xs"
 />
 </div>
 <div class="flex items-center gap-1">
@@ -63,22 +63,22 @@ class="border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:r
 type="date"
 v-model="toDate"
 @change="loadLedger"
-class="border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all"
+class="bs-input bs-input-sm px-2 py-1 text-xs"
 />
 </div>
 <button
 v-if="showLastMonth"
 @click="showLastMonth = false"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/30"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-all bg-blue-600 hover:bg-blue-700 shadow-sm"
 >{{ __("إظهار الكل") }}</button>
 <button
 v-else
 @click="showLastMonth = true"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
 >{{ __("آخر شهر") }}</button>
 <button
 @click="printReport"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-1.5"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-1.5"
 >
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -110,7 +110,7 @@ class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text
 
 <div class="overflow-auto max-h-[500px] rounded-xl border border-slate-100">
 <table v-if="filteredEntries.length" class="min-w-full text-xs">
-<thead class="bg-gradient-to-l from-slate-100 to-blue-50 sticky top-0">
+<thead class="sticky top-0 bg-slate-50/60">
 <tr>
 <th class="px-1 py-2.5 text-center font-bold text-slate-700 w-8"></th>
 <th class="px-2 py-2.5 text-start font-bold text-slate-700">{{ __("التاريخ") }}</th>
@@ -142,7 +142,7 @@ aria-label="تفاصيل"
 </button>
 </td>
 <td class="px-2 py-2 text-slate-600 whitespace-nowrap">{{ formatDate(e.posting_date) }}</td>
-<td class="px-2 py-2 text-slate-700">{{ formatVoucherType(e.voucher_type) }}</td>
+<td class="px-2 py-2 text-slate-700">{{ formatVoucherType(e.voucher_type, e.voucher_subtype) }}</td>
 <td class="px-2 py-2 font-semibold text-slate-900">
 <a :href="glDocUrl(e)" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">{{ e.voucher_no }}</a>
 </td>
@@ -177,7 +177,7 @@ aria-label="تفاصيل"
 </td>
 </tr>
 </template>
-<tr class="bg-slate-100 font-bold border-t-2 border-slate-300">
+<tr class="bg-slate-100 font-bold border-t-2 border-slate-200">
 <td colspan="4" class="px-2 py-2 text-slate-800">{{ __("الإجمالي") }}</td>
 <td class="px-2 py-2 text-end text-blue-700">{{ formatCurrency(ledger.total_debit) }}</td>
 <td class="px-2 py-2 text-end text-emerald-700">{{ formatCurrency(ledger.total_credit) }}</td>
@@ -250,6 +250,7 @@ headers: { "X-Customer-Token": getToken() },
 })
 if (result && result.success) {
 ledger.value = result.ledger || { opening_balance: 0, closing_balance: 0, total_debit: 0, total_credit: 0, entries: [], currency: "" }
+expandAllInvoices()
 } else {
 throw new Error(result?.message || "فشل تحميل كشف الحساب")
 }
@@ -262,6 +263,48 @@ loading.value = false
 
 function isInvoice(voucher_type) {
 return voucher_type === "Sales Invoice" || voucher_type === "Purchase Invoice"
+}
+
+// Invoice details are shown by default: open every invoice row and load all items in one call.
+async function expandAllInvoices() {
+const invoices = []
+const seen = new Set()
+for (const e of ledger.value.entries || []) {
+if (isInvoice(e.voucher_type) && e.voucher_no && !seen.has(e.voucher_no)) {
+seen.add(e.voucher_no)
+invoices.push({ voucher_type: e.voucher_type, voucher_no: e.voucher_no })
+}
+}
+const expanded = {}
+invoices.forEach((v) => { expanded[v.voucher_no] = true })
+expandedRows.value = expanded
+
+const missing = invoices.filter((v) => !rowItems.value[v.voucher_no])
+if (!missing.length) return
+const loadingMap = { ...rowItemsLoading.value }
+missing.forEach((v) => { loadingMap[v.voucher_no] = true })
+rowItemsLoading.value = loadingMap
+try {
+const result = await call("bs.baron_servies.api.customer_portal.get_customer_portal_vouchers_items", {
+vouchers: JSON.stringify(missing),
+}, {
+headers: { "X-Customer-Token": getToken() },
+})
+if (!result?.success) throw new Error(result?.message)
+const byVoucher = result.items || {}
+const items = { ...rowItems.value }
+missing.forEach((v) => { items[v.voucher_no] = byVoucher[v.voucher_no] || [] })
+rowItems.value = items
+} catch (err) {
+// rows stay expandable one by one through toggleExpand
+const expandedNow = { ...expandedRows.value }
+missing.forEach((v) => { delete expandedNow[v.voucher_no] })
+expandedRows.value = expandedNow
+} finally {
+const done = { ...rowItemsLoading.value }
+missing.forEach((v) => { done[v.voucher_no] = false })
+rowItemsLoading.value = done
+}
 }
 
 async function toggleExpand(e) {
@@ -300,14 +343,22 @@ if (!date) return "-"
 return new Date(date).toLocaleDateString("en-GB")
 }
 
-function formatVoucherType(voucher_type) {
+// voucher_subtype (Receive / Pay / Credit Note …) tells a receipt from a payment and returns from invoices.
+function formatVoucherType(voucher_type, voucher_subtype) {
+const bySubtype = {
+"Payment Entry|Receive": __("قبض"),
+"Payment Entry|Pay": __("دفع"),
+"Payment Entry|Internal Transfer": __("تحويل داخلي"),
+"Sales Invoice|Credit Note": __("مرتجع مبيعات"),
+"Purchase Invoice|Debit Note": __("مرتجع مشتريات"),
+}
 const map = {
 "Sales Invoice": __("فاتورة مبيعات"),
 "Purchase Invoice": __("فاتورة مشتريات"),
 "Payment Entry": __("دفعة"),
 "Journal Entry": __("قيد يومية"),
 }
-return map[voucher_type] || voucher_type || ""
+return bySubtype[`${voucher_type}|${voucher_subtype}`] || map[voucher_type] || voucher_type || ""
 }
 
 function glDocUrl(e) {
@@ -334,6 +385,28 @@ localStorage.removeItem("bs_customer_id")
 router.replace({ name: "CustomerPortalLogin" })
 }
 
+// Printed statements include the invoice items that are expanded on screen.
+function escapeHtml(value) {
+	return String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]))
+}
+
+function printItemsRow(e) {
+	if (!isInvoice(e.voucher_type) || !expandedRows.value[e.voucher_no]) return ""
+	const items = rowItems.value[e.voucher_no] || []
+	if (!items.length) return ""
+	const rows = items.map((it) =>
+		"<tr>" +
+			"<td>" + escapeHtml(it.item_name || it.item_code) + "</td>" +
+			'<td class="num">' + escapeHtml(it.qty) + " " + escapeHtml(it.uom || "") + "</td>" +
+			'<td class="num">' + formatCurrency(it.rate) + "</td>" +
+			'<td class="num">' + formatCurrency(it.amount) + "</td>" +
+		"</tr>"
+	).join("")
+	return '<tr class="items"><td colspan="6"><table class="sub"><thead><tr>' +
+		"<th>" + __("الصنف") + '</th><th class="num">' + __("الكمية") + '</th><th class="num">' + __("السعر") + '</th><th class="num">' + __("المبلغ") + "</th>" +
+		"</tr></thead><tbody>" + rows + "</tbody></table></td></tr>"
+}
+
 function printReport() {
 const w = window.open("", "_blank", "width=1000,height=750")
 if (!w) return
@@ -346,12 +419,12 @@ const totCredit = formatCurrency(ledger.value.total_credit)
 const bodyRows = filteredEntries.value.map((e) => {
 return "<tr>" +
 "<td>" + formatDate(e.posting_date) + "</td>" +
-"<td>" + (formatVoucherType(e.voucher_type)) + "</td>" +
+"<td>" + (formatVoucherType(e.voucher_type, e.voucher_subtype)) + "</td>" +
 "<td>" + (e.voucher_no || "") + "</td>" +
 "<td class=\"num debit\">" + (e.debit ? formatCurrency(e.debit) : "") + "</td>" +
 "<td class=\"num credit\">" + (e.credit ? formatCurrency(e.credit) : "") + "</td>" +
 "<td class=\"num bal\">" + formatCurrency(e.balance) + "</td>" +
-"</tr>"
+"</tr>" + printItemsRow(e)
 }).join("")
 
 const html = `<!DOCTYPE html>
@@ -376,6 +449,11 @@ const html = `<!DOCTYPE html>
   td.debit { color: #1e40af; font-weight: 600; }
   td.credit { color: #047857; font-weight: 600; }
   td.bal { font-weight: 700; }
+  tr.items > td { background: #fafafa; padding: 4px 8px 8px; }
+  table.sub { width: 100%; margin: 0; border-collapse: collapse; }
+  table.sub th, table.sub td { border: 1px solid #eef0f3; padding: 3px 6px; font-size: 10.5px; color: #4b5563; }
+  table.sub th { background: #f3f4f6; font-weight: 600; }
+  tr.items { page-break-inside: avoid; }
   tr.opening td, tr.totals td { background: #f9fafb; font-weight: 700; }
   .footer { margin-top: 24px; text-align: center; font-size: 12px; color: #9ca3af; }
 </style>

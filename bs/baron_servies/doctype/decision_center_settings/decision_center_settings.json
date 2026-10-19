@@ -1,0 +1,239 @@
+{
+ "actions": [],
+ "creation": "2026-10-05 15:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "thresholds_section",
+  "slow_moving_days",
+  "dead_stock_days",
+  "low_stock_days",
+  "warning_stock_days",
+  "column_break_thresholds_1",
+  "sales_drop_percent",
+  "sales_growth_percent",
+  "min_sales_baseline",
+  "purchase_price_increase_percent",
+  "overstock_purchase_ratio",
+  "customer_drop_percent",
+  "customer_inactive_multiplier",
+  "min_customer_invoices",
+  "expense_thresholds_section",
+  "expense_vs_sales_threshold",
+  "expense_increase_threshold",
+  "expense_anomaly_threshold",
+  "rule_settings_section",
+  "rule_settings",
+  "plan_settings_section",
+  "plan_health_tolerance_pct",
+  "default_plan_priority",
+  "auto_lock_snapshots_days",
+  "monthly_snapshot_enabled",
+  "advanced_priority_section",
+  "priority_urgent",
+  "priority_important",
+  "priority_review"
+ ],
+ "fields": [
+  {
+   "fieldname": "thresholds_section",
+   "fieldtype": "Section Break",
+   "label": "General Thresholds"
+  },
+  {
+   "fieldname": "slow_moving_days",
+   "fieldtype": "Int",
+   "label": "Slow Moving Days",
+   "default": 90
+  },
+  {
+   "fieldname": "dead_stock_days",
+   "fieldtype": "Int",
+   "label": "Dead Stock Days",
+   "default": 180
+  },
+  {
+   "fieldname": "low_stock_days",
+   "fieldtype": "Int",
+   "label": "Low Stock Days",
+   "default": 7
+  },
+  {
+   "fieldname": "warning_stock_days",
+   "fieldtype": "Int",
+   "label": "Warning Stock Days",
+   "default": 14
+  },
+  {
+   "fieldname": "column_break_thresholds_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sales_drop_percent",
+   "fieldtype": "Percent",
+   "label": "Sales Drop Percent",
+   "default": 30
+  },
+  {
+   "fieldname": "sales_growth_percent",
+   "fieldtype": "Percent",
+   "label": "Sales Growth Percent",
+   "default": 30
+  },
+  {
+   "fieldname": "min_sales_baseline",
+   "fieldtype": "Int",
+   "label": "Min Sales Baseline",
+   "default": 3
+  },
+  {
+   "fieldname": "purchase_price_increase_percent",
+   "fieldtype": "Percent",
+   "label": "Purchase Price Increase Percent",
+   "default": 10
+  },
+  {
+   "fieldname": "overstock_purchase_ratio",
+   "fieldtype": "Float",
+   "label": "Overstock Purchase Ratio",
+   "default": 1.5
+  },
+  {
+   "fieldname": "customer_drop_percent",
+   "fieldtype": "Percent",
+   "label": "Customer Drop Percent",
+   "default": 30
+  },
+  {
+   "fieldname": "customer_inactive_multiplier",
+   "fieldtype": "Float",
+   "label": "Customer Inactive Multiplier",
+   "default": 2.0
+  },
+  {
+   "fieldname": "min_customer_invoices",
+   "fieldtype": "Int",
+   "label": "Min Customer Invoices",
+   "default": 3
+  },
+  {
+   "fieldname": "expense_thresholds_section",
+   "fieldtype": "Section Break",
+   "label": "Expense Thresholds"
+  },
+  {
+   "fieldname": "expense_vs_sales_threshold",
+   "fieldtype": "Percent",
+   "label": "Total Expense vs Sales Threshold",
+   "default": 10
+  },
+  {
+   "fieldname": "expense_increase_threshold",
+   "fieldtype": "Percent",
+   "label": "Expense Increase Threshold",
+   "default": 20
+  },
+  {
+   "fieldname": "expense_anomaly_threshold",
+   "fieldtype": "Percent",
+   "label": "Expense Anomaly Threshold",
+   "default": 30
+  },
+  {
+   "fieldname": "rule_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Rule Settings"
+  },
+  {
+   "fieldname": "rule_settings",
+   "fieldtype": "Table",
+   "label": "Rule Settings",
+   "options": "Decision Center Rule Setting"
+  },
+  {
+   "fieldname": "plan_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Plan Settings"
+  },
+  {
+   "fieldname": "plan_health_tolerance_pct",
+   "fieldtype": "Percent",
+   "label": "Plan Health Tolerance %",
+   "default": 10
+  },
+  {
+   "fieldname": "default_plan_priority",
+   "fieldtype": "Select",
+   "label": "Default Plan Priority",
+   "options": "Low\nMedium\nHigh\nCritical",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "auto_lock_snapshots_days",
+   "fieldtype": "Int",
+   "label": "Auto Lock Snapshots Days",
+   "default": 7
+  },
+  {
+   "fieldname": "monthly_snapshot_enabled",
+   "fieldtype": "Check",
+   "label": "Monthly Snapshot Enabled",
+   "default": 1
+  },
+  {
+   "fieldname": "advanced_priority_section",
+   "fieldtype": "Section Break",
+   "label": "Advanced Priority Settings"
+  },
+  {
+   "fieldname": "priority_urgent",
+   "fieldtype": "Int",
+   "label": "Priority Urgent Threshold",
+   "default": 80
+  },
+  {
+   "fieldname": "priority_important",
+   "fieldtype": "Int",
+   "label": "Priority Important Threshold",
+   "default": 60
+  },
+  {
+   "fieldname": "priority_review",
+   "fieldtype": "Int",
+   "label": "Priority Review Threshold",
+   "default": 40
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-10-06 08:43:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "Decision Center Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "All",
+   "write": 0,
+   "create": 0,
+   "delete": 0
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

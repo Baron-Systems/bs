@@ -1,5 +1,5 @@
 <template>
-	<div dir="rtl" class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+	<div dir="rtl" class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-slate-900">
 		<!-- Decorative background blobs -->
 		<div class="absolute top-0 -left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
 		<div class="absolute bottom-0 -right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
@@ -8,7 +8,7 @@
 		<div class="max-w-md w-full space-y-8 relative z-10">
 			<!-- Logo & Title -->
 			<div class="text-center">
-				<div class="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/40 mb-4">
+				<div class="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center shadow-2xl mb-4 bg-blue-600 shadow-sm">
 					<svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
 					</svg>
@@ -61,7 +61,7 @@
 								type="text"
 								:placeholder="__('اسم المستخدم أو البريد الإلكتروني')"
 								:disabled="session.login.loading"
-								class="block w-full border border-slate-300 rounded-xl ps-10 pe-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all disabled:bg-slate-100"
+								class="bs-input block w-full ps-10 pe-3 py-2.5 text-slate-900 placeholder-slate-400 disabled:bg-slate-100"
 							/>
 						</div>
 					</div>
@@ -83,7 +83,7 @@
 									:type="showPassword ? 'text' : 'password'"
 									:placeholder="__('أدخل كلمة المرور')"
 									:disabled="session.login.loading"
-									class="block w-full border border-slate-300 rounded-xl ps-10 pe-10 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all disabled:bg-slate-100"
+									class="bs-input block w-full ps-10 pe-10 py-2.5 text-slate-900 placeholder-slate-400 disabled:bg-slate-100"
 								/>
 								<button
 									type="button"
@@ -108,7 +108,7 @@
 						<button
 							:disabled="session.login.loading"
 							type="submit"
-							class="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-500/30 text-sm font-semibold text-white bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+							class="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 shadow-sm"
 						>
 							<svg v-if="session.login.loading" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

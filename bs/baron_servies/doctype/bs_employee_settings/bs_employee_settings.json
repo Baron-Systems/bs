@@ -1,0 +1,194 @@
+{
+ "actions": [],
+ "creation": "2026-10-19 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rules_section",
+  "day_rate_basis",
+  "overtime_multiplier",
+  "column_break_rules",
+  "late_deduction_enabled",
+  "treat_missing_as_absent",
+  "defaults_section",
+  "default_work_days",
+  "default_shift_start",
+  "default_shift_end",
+  "column_break_defaults",
+  "default_grace_minutes",
+  "default_daily_hours",
+  "default_annual_leave_days",
+  "punch_section",
+  "punch_require_pin",
+  "punch_min_interval_minutes",
+  "punch_early_window_minutes",
+  "column_break_punch",
+  "punch_allow_day_off",
+  "count_early_arrival_as_overtime",
+  "accounts_section",
+  "company_accounts"
+ ],
+ "fields": [
+  {
+   "fieldname": "rules_section",
+   "fieldtype": "Section Break",
+   "label": "Calculation Rules"
+  },
+  {
+   "fieldname": "day_rate_basis",
+   "fieldtype": "Select",
+   "label": "Day Rate Basis",
+   "options": "Working Days\n30 Days",
+   "default": "Working Days"
+  },
+  {
+   "fieldname": "overtime_multiplier",
+   "fieldtype": "Float",
+   "label": "Overtime Multiplier",
+   "default": "1.25"
+  },
+  {
+   "fieldname": "column_break_rules",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "late_deduction_enabled",
+   "fieldtype": "Check",
+   "label": "Deduct Late Minutes",
+   "default": "0"
+  },
+  {
+   "fieldname": "treat_missing_as_absent",
+   "fieldtype": "Check",
+   "label": "Treat Missing Attendance as Absent",
+   "default": "1"
+  },
+  {
+   "fieldname": "defaults_section",
+   "fieldtype": "Section Break",
+   "label": "Default Schedule"
+  },
+  {
+   "fieldname": "default_work_days",
+   "fieldtype": "Data",
+   "label": "Default Work Days",
+   "default": "Sat,Sun,Mon,Tue,Wed,Thu"
+  },
+  {
+   "fieldname": "default_shift_start",
+   "fieldtype": "Time",
+   "label": "Default Shift Start",
+   "default": "08:00:00"
+  },
+  {
+   "fieldname": "default_shift_end",
+   "fieldtype": "Time",
+   "label": "Default Shift End",
+   "default": "16:00:00"
+  },
+  {
+   "fieldname": "column_break_defaults",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_grace_minutes",
+   "fieldtype": "Int",
+   "label": "Default Grace Minutes",
+   "default": "10"
+  },
+  {
+   "fieldname": "default_daily_hours",
+   "fieldtype": "Float",
+   "label": "Default Daily Hours",
+   "default": "8"
+  },
+  {
+   "fieldname": "default_annual_leave_days",
+   "fieldtype": "Float",
+   "label": "Default Annual Leave Days",
+   "default": "14"
+  },
+  {
+   "fieldname": "punch_section",
+   "fieldtype": "Section Break",
+   "label": "Check In / Check Out"
+  },
+  {
+   "fieldname": "punch_require_pin",
+   "fieldtype": "Check",
+   "label": "Require Employee PIN",
+   "default": "0"
+  },
+  {
+   "fieldname": "punch_min_interval_minutes",
+   "fieldtype": "Int",
+   "label": "Minimum Minutes Between Punches",
+   "default": "2"
+  },
+  {
+   "fieldname": "punch_early_window_minutes",
+   "fieldtype": "Int",
+   "label": "Allow Check In Before Shift (Minutes)",
+   "default": "120"
+  },
+  {
+   "fieldname": "column_break_punch",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "punch_allow_day_off",
+   "fieldtype": "Check",
+   "label": "Allow Punch on Day Off",
+   "default": "0"
+  },
+  {
+   "fieldname": "count_early_arrival_as_overtime",
+   "fieldtype": "Check",
+   "label": "Count Early Arrival as Overtime",
+   "default": "0"
+  },
+  {
+   "fieldname": "accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Company Accounts"
+  },
+  {
+   "fieldname": "company_accounts",
+   "fieldtype": "Table",
+   "label": "Company Accounts",
+   "options": "BS Employee Company Account"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-19 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "BS Employee Settings",
+ "owner": "Administrator",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "issingle": 1,
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "BS HR Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ]
+}

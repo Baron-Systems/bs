@@ -1,0 +1,78 @@
+{
+ "actions": [],
+ "creation": "2026-10-18 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "line_type",
+  "component",
+  "quantity",
+  "amount",
+  "note",
+  "is_auto",
+  "advance"
+ ],
+ "fields": [
+  {
+   "fieldname": "line_type",
+   "fieldtype": "Select",
+   "label": "Line Type",
+   "options": "Earning\nDeduction\nAdvance",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "component",
+   "fieldtype": "Select",
+   "label": "Component",
+   "options": "Overtime\nBonus\nCommission\nTransport Allowance\nFood Allowance\nPhone Allowance\nOther Earning\nAbsence\nLate\nUnpaid Leave\nAdministrative\nOther Deduction\nAdvance Installment",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "Quantity",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Data",
+   "label": "Note",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "is_auto",
+   "fieldtype": "Check",
+   "label": "Auto",
+   "read_only": 1
+  },
+  {
+   "fieldname": "advance",
+   "fieldtype": "Link",
+   "label": "Advance",
+   "options": "BS Employee Advance",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-18 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "BS Payroll Line",
+ "owner": "Administrator",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "istable": 1,
+ "permissions": []
+}

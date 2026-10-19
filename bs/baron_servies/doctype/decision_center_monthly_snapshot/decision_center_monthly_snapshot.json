@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "autoname": "format:{month}",
+ "creation": "2026-10-05 15:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "month",
+  "generated_at",
+  "locked_at",
+  "locked",
+  "locked_by",
+  "created_by_scheduler",
+  "snapshot_data_section",
+  "metrics_snapshot",
+  "expense_categories_snapshot",
+  "inventory_snapshot",
+  "plan_snapshot",
+  "decisions_snapshot",
+  "version_section",
+  "settings_version",
+  "rule_version_hash",
+  "engine_version"
+ ],
+ "fields": [
+  {
+   "fieldname": "month",
+   "fieldtype": "Data",
+   "label": "Month",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "generated_at",
+   "fieldtype": "Datetime",
+   "label": "Generated At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "locked_at",
+   "fieldtype": "Datetime",
+   "label": "Locked At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "locked",
+   "fieldtype": "Check",
+   "label": "Locked",
+   "default": 0
+  },
+  {
+   "fieldname": "locked_by",
+   "fieldtype": "Link",
+   "label": "Locked By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_by_scheduler",
+   "fieldtype": "Check",
+   "label": "Created By Scheduler",
+   "default": 0,
+   "read_only": 1
+  },
+  {
+   "fieldname": "snapshot_data_section",
+   "fieldtype": "Section Break",
+   "label": "Snapshot Data"
+  },
+  {
+   "fieldname": "metrics_snapshot",
+   "fieldtype": "Code",
+   "label": "Metrics Snapshot",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expense_categories_snapshot",
+   "fieldtype": "Code",
+   "label": "Expense Categories Snapshot",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inventory_snapshot",
+   "fieldtype": "Code",
+   "label": "Inventory Snapshot",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "plan_snapshot",
+   "fieldtype": "Code",
+   "label": "Plan Snapshot",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "decisions_snapshot",
+   "fieldtype": "Code",
+   "label": "Decisions Snapshot",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "version_section",
+   "fieldtype": "Section Break",
+   "label": "Versioning"
+  },
+  {
+   "fieldname": "settings_version",
+   "fieldtype": "Code",
+   "label": "Settings Version",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rule_version_hash",
+   "fieldtype": "Data",
+   "label": "Rule Version Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "engine_version",
+   "fieldtype": "Data",
+   "label": "Engine Version",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-05 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "Decision Center Monthly Snapshot",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "All",
+   "share": 0,
+   "write": 0
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Decision Center User",
+   "share": 0,
+   "write": 0
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Decision Center Manager",
+   "share": 0,
+   "write": 0
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "month",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

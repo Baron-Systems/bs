@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "creation": "2026-10-18 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "posting_date",
+  "period",
+  "amount",
+  "source",
+  "payroll_entry",
+  "journal_entry",
+  "note"
+ ],
+ "fields": [
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "period",
+   "fieldtype": "Date",
+   "label": "Period",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Select",
+   "label": "Source",
+   "options": "Payroll\nManual\nWrite Off",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "payroll_entry",
+   "fieldtype": "Link",
+   "label": "Payroll Entry",
+   "options": "BS Payroll Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "journal_entry",
+   "fieldtype": "Link",
+   "label": "Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Data",
+   "label": "Note"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-18 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "BS Advance Repayment",
+ "owner": "Administrator",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "istable": 1,
+ "permissions": []
+}

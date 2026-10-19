@@ -319,7 +319,12 @@ def create_quick_purchase_invoice(
 		"company": company,
 		"supplier": supplier,
 		"posting_date": posting_date,
+		# Without this ERPNext resets posting_date to today on validate.
+		"set_posting_time": 1,
 		"due_date": due_date,
+		# Keep the invoice total exactly equal to the screen total (no rounding adjustment);
+		# also required so a paid invoice can be paid in full.
+		"disable_rounded_total": 1,
 		"set_warehouse": warehouse if update_stock else None,
 		"update_stock": update_stock,
 		"is_paid": is_paid,
@@ -331,8 +336,9 @@ def create_quick_purchase_invoice(
 	doc.insert()
 
 	if is_paid and doc.grand_total:
-		doc.paid_amount = doc.grand_total
-		doc.base_paid_amount = doc.base_grand_total
+		payable = doc.rounded_total if not cint(doc.disable_rounded_total) and doc.rounded_total else doc.grand_total
+		doc.paid_amount = payable
+		doc.base_paid_amount = flt(payable * flt(doc.conversion_rate or 1), doc.precision("base_paid_amount"))
 		doc.save()
 
 	if submit:
@@ -344,14 +350,214 @@ def create_quick_purchase_invoice(
 			)
 		doc.submit()
 
+	price_list_updated = None
 	if update_purchase_price:
-		_update_purchase_prices(price_updates, buying_price_list, company)
+		if not buying_price_list:
+			frappe.msgprint(
+				_("لم يتم تحديث أسعار الشراء: لا توجد قائمة أسعار شراء افتراضية في إعدادات الشراء"),
+				indicator="orange",
+				alert=True,
+			)
+		else:
+			_update_purchase_prices(price_updates, buying_price_list, company)
+			price_list_updated = buying_price_list
 
 	return {
 		"name": doc.name,
 		"docstatus": doc.docstatus,
 		"url": f"/app/purchase-invoice/{doc.name}",
+		"grand_total": doc.grand_total,
+		"outstanding_amount": doc.outstanding_amount,
+		"price_list_updated": price_list_updated,
 	}
+
+
+@frappe.whitelist()
+def get_supplier_purchased_items(supplier, company, warehouse=None, limit=300):
+	"""Items previously bought from a supplier (submitted, non-return invoices).
+
+	Each row carries the last purchase date/rate from this supplier, how many invoices
+	included it and the total quantity, plus the usual stock enrichment.
+	"""
+	if not frappe.has_permission("Purchase Invoice", "read"):
+		frappe.throw(_("You do not have {0} permission on Purchase Invoice").format(_("read")), frappe.PermissionError)
+	_check_company_permission(company)
+	if not supplier:
+		frappe.throw(_("Supplier is required"))
+
+	history = frappe.db.sql(
+		"""
+		select pii.item_code,
+			max(pi.posting_date) as last_date,
+			count(distinct pi.name) as invoice_count,
+			sum(pii.stock_qty) as total_qty
+		from `tabPurchase Invoice Item` pii
+		join `tabPurchase Invoice` pi on pi.name = pii.parent
+		where pi.docstatus = 1 and pi.is_return = 0
+			and pi.supplier = %(supplier)s and pi.company = %(company)s
+		group by pii.item_code
+		order by last_date desc
+		limit %(limit)s
+		""",
+		{"supplier": supplier, "company": company, "limit": cint(limit) or 300},
+		as_dict=True,
+	)
+	if not history:
+		return []
+
+	codes = [h.item_code for h in history]
+	# Latest rate per item (per stock unit) from this supplier
+	last_rates = {}
+	for row in frappe.db.sql(
+		"""
+		select pii.item_code, pii.stock_uom_rate, pii.rate, pii.conversion_factor
+		from `tabPurchase Invoice Item` pii
+		join `tabPurchase Invoice` pi on pi.name = pii.parent
+		where pi.docstatus = 1 and pi.is_return = 0
+			and pi.supplier = %(supplier)s and pi.company = %(company)s
+			and pii.item_code in %(codes)s
+		order by pi.posting_date desc, pi.creation desc, pii.idx asc
+		""",
+		{"supplier": supplier, "company": company, "codes": codes},
+		as_dict=True,
+	):
+		if row.item_code not in last_rates:
+			rate = flt(row.stock_uom_rate) or flt(row.rate) / (flt(row.conversion_factor) or 1)
+			last_rates[row.item_code] = flt(rate, 4)
+
+	items = frappe.get_all(
+		"Item",
+		filters={"name": ["in", codes], "disabled": 0},
+		fields=[
+			"name as item_code", "item_name", "stock_uom", "image",
+			"last_purchase_rate", "has_batch_no", "has_serial_no",
+		],
+	)
+	by_code = {it["item_code"]: it for it in _enrich_items(items, company, warehouse)}
+
+	result = []
+	for h in history:  # keep "most recently bought first"
+		it = by_code.get(h.item_code)
+		if not it:
+			continue  # disabled / deleted item
+		it.update({
+			"last_supplier_date": h.last_date,
+			"last_supplier_rate": last_rates.get(h.item_code, 0),
+			"invoice_count": cint(h.invoice_count),
+			"total_qty": flt(h.total_qty),
+		})
+		result.append(it)
+	return result
+
+
+# =============================================================================
+# Quick "new item" from the purchase invoice screen
+# =============================================================================
+
+def _suggest_item_code():
+	"""Next numeric item code (codes on this site are plain numbers)."""
+	row = frappe.db.sql("select max(cast(name as unsigned)) from `tabItem` where name regexp '^[0-9]+$'")
+	return str(cint(row[0][0] if row else 0) + 1)
+
+
+@frappe.whitelist()
+def get_new_item_options(company=None):
+	if not frappe.has_permission("Item", "create"):
+		frappe.throw(_("ليس لديك صلاحية إنشاء أصناف"), frappe.PermissionError)
+	stock = frappe.get_cached_doc("Stock Settings")
+	return {
+		"item_groups": frappe.get_all("Item Group", filters={"is_group": 0}, pluck="name", order_by="name"),
+		"uoms": frappe.get_all("UOM", filters={"enabled": 1}, pluck="name", order_by="name"),
+		"default_item_group": stock.item_group,
+		"default_uom": stock.stock_uom or "Nos",
+		"suggested_code": _suggest_item_code(),
+		"buying_price_list": _get_default_buying_price_list(company) if company else None,
+		"selling_price_list": frappe.db.get_single_value("Selling Settings", "selling_price_list"),
+	}
+
+
+def _upsert_item_price(item_code, price_list, rate, uom, buying=False, company=None):
+	if not price_list or flt(rate) <= 0:
+		return
+	filters = {"item_code": item_code, "price_list": price_list, "buying" if buying else "selling": 1}
+	existing = frappe.db.get_value("Item Price", filters, "name")
+	if existing:
+		frappe.db.set_value("Item Price", existing, "price_list_rate", flt(rate))
+		return
+	frappe.get_doc({
+		"doctype": "Item Price",
+		"item_code": item_code,
+		"price_list": price_list,
+		"buying": 1 if buying else 0,
+		"selling": 0 if buying else 1,
+		"price_list_rate": flt(rate),
+		"uom": uom,
+		"currency": frappe.db.get_value("Price List", price_list, "currency")
+		or (company and frappe.db.get_value("Company", company, "default_currency")),
+	}).insert(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def create_quick_item(data, company, warehouse=None):
+	"""Create a stock item and return it shaped like a search result (ready for the cart)."""
+	if not frappe.has_permission("Item", "create"):
+		frappe.throw(_("ليس لديك صلاحية إنشاء أصناف"), frappe.PermissionError)
+	_check_company_permission(company)
+	data = json.loads(data) if isinstance(data, str) else (data or {})
+
+	item_name = (data.get("item_name") or "").strip()
+	item_code = (data.get("item_code") or "").strip()
+	item_group = data.get("item_group")
+	stock_uom = data.get("stock_uom")
+	barcode = (data.get("barcode") or "").strip()
+
+	if not item_name:
+		frappe.throw(_("اسم الصنف مطلوب"))
+	if len(item_name) > 140:
+		frappe.throw(_("اسم الصنف طويل جداً (الحد 140 حرفاً)"))
+	if not item_group or not frappe.db.exists("Item Group", item_group):
+		frappe.throw(_("يرجى اختيار مجموعة الصنف"))
+	if not stock_uom or not frappe.db.exists("UOM", stock_uom):
+		frappe.throw(_("يرجى اختيار الوحدة"))
+
+	same_name = frappe.db.get_value("Item", {"item_name": item_name, "disabled": 0}, "name")
+	if same_name:
+		frappe.throw(_("يوجد صنف بنفس الاسم: {0} ({1})").format(item_name, same_name))
+	if item_code:
+		if frappe.db.exists("Item", item_code):
+			frappe.throw(_("الكود {0} مستخدم لصنف آخر").format(item_code))
+	else:
+		item_code = _suggest_item_code()
+	if barcode:
+		used_by = frappe.db.get_value("Item Barcode", {"barcode": barcode}, "parent")
+		if used_by:
+			frappe.throw(_("الباركود {0} مستخدم للصنف {1}").format(barcode, used_by))
+
+	item = frappe.get_doc({
+		"doctype": "Item",
+		"item_code": item_code,
+		"item_name": item_name,
+		"description": item_name,
+		"item_group": item_group,
+		"stock_uom": stock_uom,
+		"is_stock_item": 1,
+		"include_item_in_manufacturing": 0,
+		"item_defaults": [{"company": company, "default_warehouse": warehouse}] if warehouse else [{"company": company}],
+		"barcodes": [{"barcode": barcode}] if barcode else [],
+	})
+	if frappe.get_meta("Item").has_field("custom_company"):
+		item.custom_company = company
+	item.insert()
+
+	_upsert_item_price(item.name, _get_default_buying_price_list(company), data.get("buying_rate"), stock_uom, True, company)
+	_upsert_item_price(item.name, frappe.db.get_single_value("Selling Settings", "selling_price_list"),
+		data.get("selling_rate"), stock_uom, False, company)
+
+	rows = [{
+		"item_code": item.name, "item_name": item.item_name, "stock_uom": item.stock_uom,
+		"image": item.image, "last_purchase_rate": 0, "has_batch_no": 0, "has_serial_no": 0,
+	}]
+	return _enrich_items(rows, company, warehouse)[0]
 
 
 @frappe.whitelist()
@@ -403,15 +609,15 @@ def _get_default_buying_price_list(company):
 
 
 def _update_purchase_prices(price_updates, buying_price_list, company):
-	"""Update Item.last_purchase_rate and Item Price records."""
+	"""Create/update the Item Price in the default buying price list.
+
+	Item.last_purchase_rate is left to ERPNext: it is set when the invoice is submitted
+	(and correctly ignores back-dated invoices), so a draft never changes it.
+	"""
 	for update in price_updates:
 		item_code = update["item_code"]
 		rate = update["rate"]
 
-		# Update last purchase rate on the Item itself
-		frappe.db.set_value("Item", item_code, "last_purchase_rate", rate)
-
-		# Update or create Item Price in the default buying price list
 		if buying_price_list:
 			existing = frappe.db.get_value(
 				"Item Price",
@@ -419,7 +625,12 @@ def _update_purchase_prices(price_updates, buying_price_list, company):
 					"item_code": item_code,
 					"price_list": buying_price_list,
 					"buying": 1,
+					"uom": ["in", [update.get("uom") or "", ""]],
 				},
+				"name",
+			) or frappe.db.get_value(
+				"Item Price",
+				{"item_code": item_code, "price_list": buying_price_list, "buying": 1},
 				"name",
 			)
 			if existing:
@@ -431,6 +642,7 @@ def _update_purchase_prices(price_updates, buying_price_list, company):
 					"price_list": buying_price_list,
 					"buying": 1,
 					"price_list_rate": rate,
+					"uom": update.get("uom"),
 					"currency": frappe.db.get_value("Price List", buying_price_list, "currency")
 					or frappe.db.get_value("Company", company, "default_currency"),
 				})

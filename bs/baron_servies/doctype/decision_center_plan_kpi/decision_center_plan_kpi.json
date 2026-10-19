@@ -1,0 +1,159 @@
+{
+ "actions": [],
+ "creation": "2026-10-05 15:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "is_primary",
+  "metric_key",
+  "metric_label",
+  "direction",
+  "weight",
+  "tolerance_pct",
+  "baseline_section",
+  "baseline_strategy",
+  "progress_strategy",
+  "computed_baseline",
+  "override_baseline",
+  "override_reason",
+  "overridden_by",
+  "overridden_at",
+  "effective_baseline",
+  "target_section",
+  "target_value",
+  "current_value",
+  "target_achieved"
+ ],
+ "fields": [
+  {
+   "fieldname": "is_primary",
+   "fieldtype": "Check",
+   "label": "Is Primary",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "metric_key",
+   "fieldtype": "Link",
+   "label": "Metric",
+   "options": "Decision Center Metric Capability",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "metric_label",
+   "fieldtype": "Data",
+   "label": "Metric Label",
+   "read_only": 1
+  },
+  {
+   "fieldname": "direction",
+   "fieldtype": "Select",
+   "label": "Direction",
+   "options": "increase\ndecrease",
+   "reqd": 1
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight",
+   "default": 0
+  },
+  {
+   "fieldname": "tolerance_pct",
+   "fieldtype": "Percent",
+   "label": "Tolerance %"
+  },
+  {
+   "fieldname": "baseline_section",
+   "fieldtype": "Section Break",
+   "label": "Baseline"
+  },
+  {
+   "fieldname": "baseline_strategy",
+   "fieldtype": "Select",
+   "label": "Baseline Strategy",
+   "options": "previous_equivalent_period\naverage_previous_3_periods\nsnapshot_at_plan_start\nmanual_only",
+   "read_only": 1
+  },
+  {
+   "fieldname": "progress_strategy",
+   "fieldtype": "Select",
+   "label": "Progress Strategy",
+   "options": "level\ncumulative_growth\ncumulative_ceiling",
+   "read_only": 1
+  },
+  {
+   "fieldname": "computed_baseline",
+   "fieldtype": "Float",
+   "label": "Computed Baseline",
+   "read_only": 1
+  },
+  {
+   "fieldname": "override_baseline",
+   "fieldtype": "Float",
+   "label": "Override Baseline"
+  },
+  {
+   "fieldname": "override_reason",
+   "fieldtype": "Small Text",
+   "label": "Override Reason"
+  },
+  {
+   "fieldname": "overridden_by",
+   "fieldtype": "Link",
+   "label": "Overridden By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "overridden_at",
+   "fieldtype": "Datetime",
+   "label": "Overridden At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "effective_baseline",
+   "fieldtype": "Float",
+   "label": "Effective Baseline",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_section",
+   "fieldtype": "Section Break",
+   "label": "Target"
+  },
+  {
+   "fieldname": "target_value",
+   "fieldtype": "Float",
+   "label": "Target Value",
+   "reqd": 1
+  },
+  {
+   "fieldname": "current_value",
+   "fieldtype": "Float",
+   "label": "Current Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_achieved",
+   "fieldtype": "Check",
+   "label": "Target Achieved",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-05 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "Decision Center Plan KPI",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

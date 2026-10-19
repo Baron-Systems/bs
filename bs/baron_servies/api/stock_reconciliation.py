@@ -361,3 +361,25 @@ def create_opening_stock_reconciliation(company, warehouse, posting_date, items,
 		"docstatus": doc.docstatus,
 		"url": f"/app/stock-reconciliation/{doc.name}",
 	}
+
+
+# =============================================================================
+# Item quick edit
+# =============================================================================
+
+@frappe.whitelist()
+def update_item_name(item_code, item_name):
+	"""Rename an item's display name (item_name) from the quick inventory screen."""
+	item_name = (item_name or "").strip()
+	if not item_name:
+		frappe.throw(_("اسم الصنف مطلوب"))
+	if len(item_name) > 140:
+		frappe.throw(_("اسم الصنف طويل جداً (الحد 140 حرفاً)"))
+	if not frappe.has_permission("Item", "write", doc=item_code):
+		frappe.throw(_("ليس لديك صلاحية تعديل الصنف {0}").format(item_code), frappe.PermissionError)
+
+	item = frappe.get_doc("Item", item_code)
+	if item.item_name != item_name:
+		item.item_name = item_name
+		item.save()
+	return {"item_code": item.name, "item_name": item.item_name}

@@ -1,0 +1,224 @@
+{
+ "actions": [],
+ "autoname": "format:PLAN-{YYYY}-{#####}",
+ "creation": "2026-10-05 15:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "plan_name",
+  "description",
+  "status",
+  "scheduler_status",
+  "scheduler_status_updated_at",
+  "priority",
+  "date_section",
+  "start_date",
+  "end_date",
+  "target_achieved",
+  "notes",
+  "audit_section",
+  "created_by",
+  "created_at",
+  "activated_at",
+  "completed_at",
+  "kpis_section",
+  "kpis",
+  "actions_section",
+  "actions",
+  "checkpoints_section",
+  "checkpoints"
+ ],
+ "fields": [
+  {
+   "fieldname": "plan_name",
+   "fieldtype": "Data",
+   "label": "Plan Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nScheduled\nActive\nCompleted\nCancelled",
+   "default": "Draft",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "scheduler_status",
+   "fieldtype": "Select",
+   "label": "Scheduler Status",
+   "options": "none\nready_to_start\nready_to_close",
+   "default": "none",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "scheduler_status_updated_at",
+   "fieldtype": "Datetime",
+   "label": "Scheduler Status Updated At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Low\nMedium\nHigh\nCritical",
+   "default": "Medium",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_section",
+   "fieldtype": "Section Break",
+   "label": "Dates"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_achieved",
+   "fieldtype": "Check",
+   "label": "Target Achieved",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "audit_section",
+   "fieldtype": "Section Break",
+   "label": "Audit"
+  },
+  {
+   "fieldname": "created_by",
+   "fieldtype": "Link",
+   "label": "Created By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_at",
+   "fieldtype": "Datetime",
+   "label": "Created At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activated_at",
+   "fieldtype": "Datetime",
+   "label": "Activated At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "completed_at",
+   "fieldtype": "Datetime",
+   "label": "Completed At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "kpis_section",
+   "fieldtype": "Section Break",
+   "label": "KPIs"
+  },
+  {
+   "fieldname": "kpis",
+   "fieldtype": "Table",
+   "label": "KPIs",
+   "options": "Decision Center Plan KPI",
+   "reqd": 1
+  },
+  {
+   "fieldname": "actions_section",
+   "fieldtype": "Section Break",
+   "label": "Actions"
+  },
+  {
+   "fieldname": "actions",
+   "fieldtype": "Table",
+   "label": "Actions",
+   "options": "Decision Center Plan Action"
+  },
+  {
+   "fieldname": "checkpoints_section",
+   "fieldtype": "Section Break",
+   "label": "Checkpoints"
+  },
+  {
+   "fieldname": "checkpoints",
+   "fieldtype": "Table",
+   "label": "Checkpoints",
+   "options": "Decision Center Plan Checkpoint",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-10-05 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Baron servies",
+ "name": "Decision Center Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "All",
+   "share": 0,
+   "write": 0
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Decision Center User",
+   "share": 0,
+   "write": 0
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Decision Center Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -97,6 +97,8 @@ after_install = "bs.patches.add_sales_order_custom_fields.execute"
 # -------
 patches = [
 	{"patch_module": "bs.patches.add_sales_order_custom_fields", "patch_name": "Add Sales Order Custom Fields for Store"},
+	{"patch_module": "bs.patches.create_decision_center_roles", "patch_name": "Create Decision Center Roles"},
+	{"patch_module": "bs.patches.seed_decision_center_metric_registry", "patch_name": "Seed Decision Center Metric Registry"},
 ]
 
 # Uninstallation
@@ -160,23 +162,14 @@ patches = [
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"bs.tasks.all"
-# 	],
-# 	"daily": [
-# 		"bs.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"bs.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"bs.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"bs.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"hourly": [
+		"bs.baron_servies.api.decision_center.scheduler.refresh_plan_scheduler_status",
+	],
+	"daily": [
+		"bs.baron_servies.api.decision_center.scheduler.run_snapshot_scheduler",
+	],
+}
 
 # Testing
 # -------

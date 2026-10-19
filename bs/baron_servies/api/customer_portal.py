@@ -336,6 +336,34 @@ def get_customer_portal_voucher_items(voucher_type, voucher_no):
 		return {"success": False, "message": "حدث خطأ أثناء جلب أصناف المستند"}
 
 
+@frappe.whitelist(allow_guest=True)
+def get_customer_portal_vouchers_items(vouchers):
+	"""Batch line items for the logged-in customer's invoices (statement shows them expanded)."""
+	customer_id = _get_customer_from_token()
+	if not customer_id:
+		return {"success": False, "message": "غير مصرح لك بالوصول"}
+
+	try:
+		if isinstance(vouchers, str):
+			vouchers = json.loads(vouchers or "[]")
+		requested = {
+			v.get("voucher_no") for v in (vouchers or [])[:500]
+			if v.get("voucher_type") == "Sales Invoice" and v.get("voucher_no")
+		}
+		# Only invoices that belong to this customer
+		owned = set(frappe.get_all(
+			"Sales Invoice",
+			filters={"name": ["in", list(requested)], "customer": customer_id},
+			pluck="name",
+		)) if requested else set()
+
+		from bs.baron_servies.api.ledger_report import fetch_vouchers_items
+		return {"success": True, "items": fetch_vouchers_items({"Sales Invoice": owned})}
+	except Exception as e:
+		frappe.log_error(f"Customer Portal Vouchers Items Error: {str(e)}")
+		return {"success": False, "message": "حدث خطأ أثناء جلب أصناف المستندات"}
+
+
 def _normalize_id_no(value):
 	"""Remove spaces, dashes, underscores and slashes from an id number."""
 	return re.sub(r"[\s\-_/]+", "", str(value or ""))

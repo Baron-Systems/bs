@@ -14,6 +14,8 @@ Works for both Customer (Receivable) and Supplier (Payable) parties.
 
 from __future__ import unicode_literals
 
+import json
+
 import frappe
 from frappe import _
 from frappe.utils import flt, getdate, nowdate, add_days
@@ -42,8 +44,9 @@ def get_party_ledger(party_type, party, company=None, from_date=None, to_date=No
 			"closing_balance": float,
 			"total_debit": float,
 			"total_credit": float,
-			"entries": [ { posting_date, voucher_type, voucher_no,
+			"entries": [ { posting_date, voucher_type, voucher_subtype, voucher_no,
 						   account, debit, credit, balance, remarks, against_voucher } ]
+			(one entry per voucher; against_voucher lists every invoice it settled)
 		}
 	"""
 	if not party:
@@ -116,28 +119,32 @@ def get_party_ledger(party_type, party, company=None, from_date=None, to_date=No
 		entry_conditions.append("account = %(account)s")
 		entry_params["account"] = party_account
 
-	# --- Fetch only the newest N rows for display ---
+	# --- Fetch only the newest N vouchers for display ---
+	# One row per voucher: a payment allocated against several invoices produces one GL row
+	# per invoice (same voucher_no); the statement shows it as a single movement.
 	entries = frappe.db.sql(f"""
 		SELECT
-			name AS gl_entry,
+			MIN(name) AS gl_entry,
 			posting_date,
-			account,
 			voucher_type,
-			voucher_subtype,
+			MAX(voucher_subtype) AS voucher_subtype,
 			voucher_no,
-			against_voucher_type,
-			against_voucher,
-			against,
-			remarks,
-			debit,
-			credit,
-			debit_in_account_currency,
-			credit_in_account_currency,
-			account_currency,
-			creation
+			MAX(account) AS account,
+			MAX(against_voucher_type) AS against_voucher_type,
+			GROUP_CONCAT(DISTINCT against_voucher ORDER BY against_voucher SEPARATOR ', ') AS against_voucher,
+			MAX(against) AS against,
+			MAX(remarks) AS remarks,
+			SUM(debit) AS debit,
+			SUM(credit) AS credit,
+			SUM(debit_in_account_currency) AS debit_in_account_currency,
+			SUM(credit_in_account_currency) AS credit_in_account_currency,
+			MAX(account_currency) AS account_currency,
+			COUNT(*) AS gl_rows,
+			MAX(creation) AS creation
 		FROM `tabGL Entry`
 		WHERE {' AND '.join(entry_conditions)}
-		ORDER BY posting_date DESC, creation DESC
+		GROUP BY posting_date, voucher_type, voucher_no
+		ORDER BY posting_date DESC, MAX(creation) DESC
 		LIMIT %(limit)s
 	""", {**entry_params, "limit": limit}, as_dict=True)
 
@@ -146,7 +153,7 @@ def get_party_ledger(party_type, party, company=None, from_date=None, to_date=No
 		entry["credit"] = flt(entry["credit"])
 
 	# --- Totals over the FULL date range ---
-	# If we fetched fewer rows than the limit, the result is complete and we can
+	# If we fetched fewer vouchers than the limit, the result is complete and we can
 	# sum the rows we have. Otherwise, run a separate aggregate over the full range.
 	if len(entries) < limit:
 		total_debit = sum(entry["debit"] for entry in entries)
@@ -169,7 +176,7 @@ def get_party_ledger(party_type, party, company=None, from_date=None, to_date=No
 	# Entries are ordered newest-first; the first row therefore shows the closing balance.
 	balance = closing_balance
 	for entry in entries:
-		entry["balance"] = flt(balance)
+		entry["balance"] = flt(balance, 2)
 		balance -= entry["debit"] - entry["credit"]
 
 	currency = None
@@ -220,3 +227,48 @@ def get_voucher_items(voucher_type, voucher_no):
 		order_by="idx asc",
 	)
 	return items
+
+
+@frappe.whitelist()
+def get_vouchers_items(vouchers):
+	"""
+	Batch version of get_voucher_items — one call for every invoice in a ledger.
+
+	Args:
+		vouchers (list | json): [ { voucher_type, voucher_no } ]
+
+	Returns:
+		dict: { voucher_no: [ { item_code, item_name, qty, rate, amount, uom } ] }
+	"""
+	if isinstance(vouchers, str):
+		vouchers = json.loads(vouchers or "[]")
+
+	names_by_type = {}
+	for v in (vouchers or [])[:500]:
+		vtype, vno = v.get("voucher_type"), v.get("voucher_no")
+		if vtype in INVOICE_ITEM_DOCTYPES and vno:
+			names_by_type.setdefault(vtype, set()).add(vno)
+	allowed = {t: n for t, n in names_by_type.items() if frappe.has_permission(t, "read")}
+	return fetch_vouchers_items(allowed)
+
+
+INVOICE_ITEM_DOCTYPES = {"Sales Invoice": "Sales Invoice Item", "Purchase Invoice": "Purchase Invoice Item"}
+
+
+def fetch_vouchers_items(names_by_type):
+	"""{voucher_type: {names}} → {voucher_no: [items]} — no permission checks (callers do them)."""
+	result = {}
+	for vtype, names in names_by_type.items():
+		if vtype not in INVOICE_ITEM_DOCTYPES or not names:
+			continue
+		for row in frappe.get_all(
+			INVOICE_ITEM_DOCTYPES[vtype],
+			filters={"parent": ["in", list(names)], "parenttype": vtype},
+			fields=["name", "parent", "item_code", "item_name", "qty", "rate", "amount", "uom"],
+			order_by="parent asc, idx asc",
+			limit_page_length=0,
+		):
+			result.setdefault(row.pop("parent"), []).append(row)
+		for name in names:
+			result.setdefault(name, [])
+	return result
