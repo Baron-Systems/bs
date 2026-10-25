@@ -4,12 +4,15 @@
 		<div class="flex-1 flex items-center justify-center p-4 sm:p-6">
 			<div class="w-full max-w-md">
 				<div class="text-center mb-8">
-					<div class="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-2xl mb-4 backdrop-blur-sm border border-white/10 shadow-xl">
+					<div v-if="logo && !logoFailed" class="inline-flex items-center justify-center w-36 h-36 sm:w-40 sm:h-40 mb-4">
+						<img :src="logo" :alt="appName" class="max-w-full max-h-full object-contain" draggable="false" @error="logoFailed = true" />
+					</div>
+					<div v-else class="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-2xl mb-4 backdrop-blur-sm border border-white/10 shadow-xl">
 						<svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
 						</svg>
 					</div>
-					<h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">Al Baron Systems</h1>
+					<h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">{{ appName }}</h1>
 					<p class="text-blue-200 text-lg">بوابة العملاء الذكية</p>
 				</div>
 
@@ -83,13 +86,27 @@ import { Button } from "frappe-ui"
 import { call } from "@/utils/apiWrapper"
 import { useToast } from "@/composables/useToast"
 import router from "@/router"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 
 const { showError } = useToast()
 
 const name = ref("")
 const idNo = ref("")
 const loading = ref(false)
+
+const logo = ref("")
+const logoFailed = ref(false)
+const appName = ref("Al Baron Systems")
+
+onMounted(async () => {
+	try {
+		const branding = await call("bs.baron_servies.api.customer_portal.get_customer_portal_branding")
+		if (branding?.logo) logo.value = branding.logo
+		if (branding?.app_name) appName.value = branding.app_name
+	} catch (e) {
+		// Keep the default icon and name
+	}
+})
 
 async function handleLogin() {
 	if (!name.value.trim() || !idNo.value.trim()) {

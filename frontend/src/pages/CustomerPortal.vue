@@ -1,26 +1,27 @@
 <template>
-<div class="min-h-screen flex flex-col bg-slate-50/60" dir="rtl">
+<div class="min-h-screen flex flex-col bg-slate-900 text-slate-200" dir="rtl">
 <!-- Header -->
-<header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+<header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-30 shadow-lg">
 <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
 				<div class="flex items-center gap-3 min-w-0">
-					<div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-blue-600 shadow-sm">
-<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<img v-if="logo && !logoFailed" :src="logo" alt="" class="w-11 h-11 flex-shrink-0 object-contain" draggable="false" @error="logoFailed = true" />
+					<div v-else class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/10 border border-white/10">
+<svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
 </svg>
 </div>
 <div class="min-w-0">
-<h1 class="text-base sm:text-lg font-bold text-slate-900 truncate">
+<h1 class="text-base sm:text-lg font-bold text-white truncate">
 {{ customerName || __("بوابة العميل") }}
 </h1>
-<p class="text-xs text-slate-500 truncate">
+<p class="text-xs text-blue-200/80 truncate">
 {{ __("كشف حساب العميل - دفتر الأستاذ العام") }}
 </p>
 </div>
 </div>
 <button
 @click="logout"
-class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 border border-slate-200 transition-all"
+class="px-3 py-1.5 rounded-lg text-sm text-slate-300 hover:bg-rose-500/15 hover:text-rose-300 hover:border-rose-500/40 border border-slate-700 transition-all"
 >
 {{ __("خروج") }}
 </button>
@@ -31,54 +32,54 @@ class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-red-50 hover:text-
 <!-- Loading -->
 <div v-if="loading" class="flex items-center justify-center py-20">
 <div class="flex flex-col items-center gap-3">
-<svg class="animate-spin h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24">
+<svg class="animate-spin h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24">
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 </svg>
-<p class="text-slate-500 text-sm">{{ __("جاري تحميل البيانات...") }}</p>
+<p class="text-slate-400 text-sm">{{ __("جاري تحميل البيانات...") }}</p>
 </div>
 </div>
 
-<section v-else class="bs-card p-4 sm:p-5">
+<section v-else class="bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl shadow-2xl p-4 sm:p-5">
 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
-<h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<h4 class="text-sm font-bold text-white flex items-center gap-2">
+<svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 </svg>
 {{ __("كشف حساب العميل - دفتر الأستاذ العام") }}
 </h4>
 <div class="flex items-center gap-2 flex-wrap">
 <div class="flex items-center gap-1">
-<label class="text-[10px] text-slate-500 font-medium">{{ __("من تاريخ") }}</label>
+<label class="text-[10px] text-slate-400 font-medium">{{ __("من تاريخ") }}</label>
 <input
 type="date"
 v-model="fromDate"
 @change="loadLedger"
-class="bs-input bs-input-sm px-2 py-1 text-xs"
+class="bg-slate-900/60 border border-slate-600 rounded-lg px-2 py-1 text-xs text-white [color-scheme:dark] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 />
 </div>
 <div class="flex items-center gap-1">
-<label class="text-[10px] text-slate-500 font-medium">{{ __("إلى تاريخ") }}</label>
+<label class="text-[10px] text-slate-400 font-medium">{{ __("إلى تاريخ") }}</label>
 <input
 type="date"
 v-model="toDate"
 @change="loadLedger"
-class="bs-input bs-input-sm px-2 py-1 text-xs"
+class="bg-slate-900/60 border border-slate-600 rounded-lg px-2 py-1 text-xs text-white [color-scheme:dark] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 />
 </div>
 <button
 v-if="showLastMonth"
 @click="showLastMonth = false"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-all bg-blue-600 hover:bg-blue-700 shadow-sm"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-all bg-blue-600 hover:bg-blue-500 shadow-sm"
 >{{ __("إظهار الكل") }}</button>
 <button
 v-else
 @click="showLastMonth = true"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-600 text-slate-200 hover:bg-slate-700 transition-all"
 >{{ __("آخر شهر") }}</button>
 <button
 @click="printReport"
-class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-1.5"
+class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-600 text-slate-200 hover:bg-slate-700 transition-all flex items-center gap-1.5"
 >
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -90,103 +91,103 @@ class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text
 
 <!-- GL Summary Cards -->
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
-<div class="bg-slate-50 rounded-lg p-2 border border-slate-100">
-<p class="text-[10px] text-slate-500 font-medium">{{ __("رصيد افتتاحي") }}</p>
-<p class="text-sm font-bold text-slate-800">{{ formatCurrency(ledger.opening_balance) }}</p>
+<div class="bg-slate-900/60 rounded-lg p-2 border border-slate-700">
+<p class="text-[10px] text-slate-400 font-medium">{{ __("رصيد افتتاحي") }}</p>
+<p class="text-sm font-bold text-white">{{ formatCurrency(ledger.opening_balance) }}</p>
 </div>
-<div class="bg-blue-50 rounded-lg p-2 border border-blue-100">
-<p class="text-[10px] text-blue-500 font-medium">{{ __("إجمالي مدين") }}</p>
-<p class="text-sm font-bold text-blue-700">{{ formatCurrency(ledger.total_debit) }}</p>
+<div class="bg-blue-500/10 rounded-lg p-2 border border-blue-500/30">
+<p class="text-[10px] text-blue-300 font-medium">{{ __("إجمالي مدين") }}</p>
+<p class="text-sm font-bold text-blue-300">{{ formatCurrency(ledger.total_debit) }}</p>
 </div>
-<div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100">
-<p class="text-[10px] text-emerald-500 font-medium">{{ __("إجمالي دائن") }}</p>
-<p class="text-sm font-bold text-emerald-700">{{ formatCurrency(ledger.total_credit) }}</p>
+<div class="bg-emerald-500/10 rounded-lg p-2 border border-emerald-500/30">
+<p class="text-[10px] text-emerald-300 font-medium">{{ __("إجمالي دائن") }}</p>
+<p class="text-sm font-bold text-emerald-300">{{ formatCurrency(ledger.total_credit) }}</p>
 </div>
-<div class="bg-amber-50 rounded-lg p-2 border border-amber-100">
-<p class="text-[10px] text-amber-500 font-medium">{{ __("رصيد ختامي") }}</p>
-<p class="text-sm font-bold text-amber-700">{{ formatCurrency(ledger.closing_balance) }}</p>
+<div class="bg-amber-500/10 rounded-lg p-2 border border-amber-500/30">
+<p class="text-[10px] text-amber-300 font-medium">{{ __("رصيد ختامي") }}</p>
+<p class="text-sm font-bold text-amber-300">{{ formatCurrency(ledger.closing_balance) }}</p>
 </div>
 </div>
 
-<div class="overflow-auto max-h-[500px] rounded-xl border border-slate-100">
+<div class="overflow-auto max-h-[500px] rounded-xl border border-slate-700">
 <table v-if="filteredEntries.length" class="min-w-full text-xs">
-<thead class="sticky top-0 bg-slate-50/60">
+<thead class="sticky top-0 bg-slate-900">
 <tr>
-<th class="px-1 py-2.5 text-center font-bold text-slate-700 w-8"></th>
-<th class="px-2 py-2.5 text-start font-bold text-slate-700">{{ __("التاريخ") }}</th>
-<th class="px-2 py-2.5 text-start font-bold text-slate-700">{{ __("نوع السند") }}</th>
-<th class="px-2 py-2.5 text-start font-bold text-slate-700">{{ __("رقم السند") }}</th>
-<th class="px-2 py-2.5 text-end font-bold text-slate-700">{{ __("مدين") }}</th>
-<th class="px-2 py-2.5 text-end font-bold text-slate-700">{{ __("دائن") }}</th>
-<th class="px-2 py-2.5 text-end font-bold text-slate-700">{{ __("الرصيد") }}</th>
+<th class="px-1 py-2.5 text-center font-bold text-slate-300 w-8"></th>
+<th class="px-2 py-2.5 text-start font-bold text-slate-300">{{ __("التاريخ") }}</th>
+<th class="px-2 py-2.5 text-start font-bold text-slate-300">{{ __("نوع السند") }}</th>
+<th class="px-2 py-2.5 text-start font-bold text-slate-300">{{ __("رقم السند") }}</th>
+<th class="px-2 py-2.5 text-end font-bold text-slate-300">{{ __("مدين") }}</th>
+<th class="px-2 py-2.5 text-end font-bold text-slate-300">{{ __("دائن") }}</th>
+<th class="px-2 py-2.5 text-end font-bold text-slate-300">{{ __("الرصيد") }}</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-100">
-<tr class="bg-slate-50/70 font-semibold">
-<td colspan="4" class="px-2 py-2 text-slate-700">{{ __("رصيد افتتاحي") }}</td>
+<tbody class="divide-y divide-slate-700/70">
+<tr class="bg-slate-900/40 font-semibold">
+<td colspan="4" class="px-2 py-2 text-slate-300">{{ __("رصيد افتتاحي") }}</td>
 <td colspan="2" class="px-2 py-2"></td>
-<td class="px-2 py-2 text-end font-bold text-slate-800">{{ formatCurrency(ledger.opening_balance) }}</td>
+<td class="px-2 py-2 text-end font-bold text-white">{{ formatCurrency(ledger.opening_balance) }}</td>
 </tr>
 <template v-for="e in filteredEntries" :key="e.gl_entry">
-<tr class="hover:bg-blue-50/50 transition-colors">
+<tr class="hover:bg-slate-700/40 transition-colors">
 <td class="px-1 py-2 text-center">
 <button
 v-if="isInvoice(e.voucher_type)"
 @click="toggleExpand(e)"
-class="p-1 rounded-md hover:bg-slate-200 transition-all"
+class="p-1 rounded-md hover:bg-slate-700 transition-all"
 aria-label="تفاصيل"
 >
-<svg class="w-3.5 h-3.5 text-slate-500 transition-transform" :class="expandedRows[e.voucher_no] ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<svg class="w-3.5 h-3.5 text-slate-400 transition-transform" :class="expandedRows[e.voucher_no] ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
 </svg>
 </button>
 </td>
-<td class="px-2 py-2 text-slate-600 whitespace-nowrap">{{ formatDate(e.posting_date) }}</td>
-<td class="px-2 py-2 text-slate-700">{{ formatVoucherType(e.voucher_type, e.voucher_subtype) }}</td>
-<td class="px-2 py-2 font-semibold text-slate-900">
-<a :href="glDocUrl(e)" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">{{ e.voucher_no }}</a>
+<td class="px-2 py-2 text-slate-400 whitespace-nowrap">{{ formatDate(e.posting_date) }}</td>
+<td class="px-2 py-2 text-slate-300">{{ formatVoucherType(e.voucher_type, e.voucher_subtype) }}</td>
+<td class="px-2 py-2 font-semibold">
+<a :href="glDocUrl(e)" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline">{{ e.voucher_no }}</a>
 </td>
-<td class="px-2 py-2 text-end font-semibold text-blue-700">{{ e.debit ? formatCurrency(e.debit) : "" }}</td>
-<td class="px-2 py-2 text-end font-semibold text-emerald-700">{{ e.credit ? formatCurrency(e.credit) : "" }}</td>
-<td class="px-2 py-2 text-end font-bold" :class="e.balance >= 0 ? 'text-slate-800' : 'text-rose-700'">{{ formatCurrency(e.balance) }}</td>
+<td class="px-2 py-2 text-end font-semibold text-blue-300">{{ e.debit ? formatCurrency(e.debit) : "" }}</td>
+<td class="px-2 py-2 text-end font-semibold text-emerald-300">{{ e.credit ? formatCurrency(e.credit) : "" }}</td>
+<td class="px-2 py-2 text-end font-bold" :class="e.balance >= 0 ? 'text-white' : 'text-rose-400'">{{ formatCurrency(e.balance) }}</td>
 </tr>
 <tr v-if="expandedRows[e.voucher_no]">
-<td colspan="7" class="px-2 pb-3 pt-1 bg-slate-50/60">
-<div v-if="rowItemsLoading[e.voucher_no]" class="text-center py-3 text-xs text-slate-400">{{ __("جاري تحميل التفاصيل...") }}</div>
-<div v-else-if="rowItems[e.voucher_no] && rowItems[e.voucher_no].length" class="bg-white border border-slate-100 rounded-lg p-2">
+<td colspan="7" class="px-2 pb-3 pt-1 bg-slate-900/40">
+<div v-if="rowItemsLoading[e.voucher_no]" class="text-center py-3 text-xs text-slate-500">{{ __("جاري تحميل التفاصيل...") }}</div>
+<div v-else-if="rowItems[e.voucher_no] && rowItems[e.voucher_no].length" class="bg-slate-900/70 border border-slate-700 rounded-lg p-2">
 <table class="min-w-full text-[11px]">
 <thead>
-<tr class="text-slate-500 border-b border-slate-100">
+<tr class="text-slate-400 border-b border-slate-700">
 <th class="px-2 py-1 text-start font-semibold">{{ __("الصنف") }}</th>
 <th class="px-2 py-1 text-end font-semibold">{{ __("الكمية") }}</th>
 <th class="px-2 py-1 text-end font-semibold">{{ __("السعر") }}</th>
 <th class="px-2 py-1 text-end font-semibold">{{ __("المبلغ") }}</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-100">
+<tbody class="divide-y divide-slate-800">
 <tr v-for="item in rowItems[e.voucher_no]" :key="item.name">
-<td class="px-2 py-1 text-start text-slate-700">{{ item.item_name || item.item_code }}</td>
-<td class="px-2 py-1 text-end text-slate-700">{{ item.qty }} {{ item.uom || "" }}</td>
-<td class="px-2 py-1 text-end text-slate-700">{{ formatCurrency(item.rate) }}</td>
-<td class="px-2 py-1 text-end font-semibold text-slate-900">{{ formatCurrency(item.amount) }}</td>
+<td class="px-2 py-1 text-start text-slate-300">{{ item.item_name || item.item_code }}</td>
+<td class="px-2 py-1 text-end text-slate-300">{{ item.qty }} {{ item.uom || "" }}</td>
+<td class="px-2 py-1 text-end text-slate-300">{{ formatCurrency(item.rate) }}</td>
+<td class="px-2 py-1 text-end font-semibold text-white">{{ formatCurrency(item.amount) }}</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div v-else class="text-center py-3 text-xs text-slate-400">{{ __("لا توجد أصناف") }}</div>
+<div v-else class="text-center py-3 text-xs text-slate-500">{{ __("لا توجد أصناف") }}</div>
 </td>
 </tr>
 </template>
-<tr class="bg-slate-100 font-bold border-t-2 border-slate-200">
-<td colspan="4" class="px-2 py-2 text-slate-800">{{ __("الإجمالي") }}</td>
-<td class="px-2 py-2 text-end text-blue-700">{{ formatCurrency(ledger.total_debit) }}</td>
-<td class="px-2 py-2 text-end text-emerald-700">{{ formatCurrency(ledger.total_credit) }}</td>
-<td class="px-2 py-2 text-end text-slate-900">{{ formatCurrency(ledger.closing_balance) }}</td>
+<tr class="bg-slate-900 font-bold border-t-2 border-slate-600">
+<td colspan="4" class="px-2 py-2 text-white">{{ __("الإجمالي") }}</td>
+<td class="px-2 py-2 text-end text-blue-300">{{ formatCurrency(ledger.total_debit) }}</td>
+<td class="px-2 py-2 text-end text-emerald-300">{{ formatCurrency(ledger.total_credit) }}</td>
+<td class="px-2 py-2 text-end text-white">{{ formatCurrency(ledger.closing_balance) }}</td>
 </tr>
 </tbody>
 </table>
-<div v-else class="text-center py-8 text-sm text-slate-400">
-<svg class="w-10 h-10 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div v-else class="text-center py-8 text-sm text-slate-500">
+<svg class="w-10 h-10 mx-auto mb-2 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 </svg>
 {{ __("لا توجد حركات") }}
@@ -207,6 +208,8 @@ const { showError } = useToast()
 
 const customerName = ref("")
 const customerId = ref("")
+const logo = ref("")
+const logoFailed = ref(false)
 
 const loading = ref(true)
 const ledger = ref({ opening_balance: 0, closing_balance: 0, total_debit: 0, total_credit: 0, entries: [], currency: "" })
@@ -236,8 +239,18 @@ return
 }
 customerName.value = localStorage.getItem("bs_customer_name") || ""
 customerId.value = localStorage.getItem("bs_customer_id") || ""
+loadBranding()
 await loadLedger()
 })
+
+async function loadBranding() {
+try {
+const branding = await call("bs.baron_servies.api.customer_portal.get_customer_portal_branding")
+if (branding?.logo) logo.value = branding.logo
+} catch (e) {
+// keep the default icon
+}
+}
 
 async function loadLedger() {
 loading.value = true

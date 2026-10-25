@@ -210,6 +210,23 @@ def customer_portal_logout():
 
 
 @frappe.whitelist(allow_guest=True)
+def get_customer_portal_branding():
+	"""Return the ERP logo and app name for the portal login screen."""
+	from frappe.core.doctype.navbar_settings.navbar_settings import get_app_logo
+
+	logo = None
+	try:
+		logo = get_app_logo()
+	except Exception:
+		pass
+
+	return {
+		"logo": logo,
+		"app_name": frappe.get_website_settings("app_name") or "Al Baron Systems",
+	}
+
+
+@frappe.whitelist(allow_guest=True)
 def get_customer_portal_dashboard():
 	"""Return summary data for the logged-in customer."""
 	customer_id = _get_customer_from_token()
